@@ -26,6 +26,7 @@ export const toCSV = (array) => {
   let rows = ''
   result += header.join(', ')
   const sub = subjects(array)
+  // console.log(sub)
 
   for (let i = 0; i < sub.length; i++) {
     for (let k = 0; k < sub[i].week.length; k++) {
@@ -37,6 +38,7 @@ export const toCSV = (array) => {
         parseInt(sub[i].week[k])
       )}, ${sub[i].time[1]}, FALSE, , , \n`
       result += rows
+      // console.log(rows)
       rows = ''
     }
   }
@@ -82,14 +84,19 @@ const convertDate = (date) => {
 const convertTime = (time) => {
   switch (time) {
     case 1:
+    case '1 - 3':
       return ['7:00 AM', '9:30 AM']
     case 4:
+    case '4 - 6':
       return ['9:30 AM', '12:00 PM']
     case 7:
+    case '7 - 9':
       return ['1:00 PM', '3:30 PM']
     case 10:
+    case '10 - 12':
       return ['3:30 PM', '6:00 PM']
     case 13:
+    case '13 - 15':
       return ['6:00 PM', '8:30 PM']
   }
 }
@@ -113,7 +120,7 @@ export const subjects = (array) => {
       week: getWeek(array)[i].toString().split(',')
     })
   }
-
+  console.log(subjects)
   return subjects
 }
 
