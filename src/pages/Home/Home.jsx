@@ -12,29 +12,24 @@ const Home = () => {
     const file = document.getElementById('inputFile').files[0] // Lấy file đầu tiên trong danh sách files
 
     if (file) {
-      try {
-        if (!isXLSX(file.name)) {
-          alert('Vui lòng input File định dạng .xlsx!')
-          return
-        }
-        const reader = new FileReader()
-
-        reader.onload = (e) => {
-          const data = new Uint8Array(e.target.result)
-          const workbook = read(data, { type: 'array' })
-
-          const sheetName = workbook.SheetNames[0]
-          const worksheet = workbook.Sheets[sheetName]
-
-          const jsonData = utils.sheet_to_json(worksheet)
-
-          downloadFile(toCSV(jsonData), 'output.csv')
-        }
-
-        reader.readAsArrayBuffer(file)
-      } catch (error) {
-        alert('Có Lỗi! Bạn vui lòng liên hệ với mình qua info bên dưới nhé!')
+      if (!isXLSX(file.name)) {
+        alert('Vui lòng input File định dạng .xlsx!')
+        return
       }
+      const reader = new FileReader()
+
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result)
+        const workbook = read(data, { type: 'array' })
+
+        const sheetName = workbook.SheetNames[0]
+        const worksheet = workbook.Sheets[sheetName]
+
+        const jsonData = utils.sheet_to_json(worksheet)
+
+        downloadFile(toCSV(jsonData), 'output.csv')
+      }
+      reader.readAsArrayBuffer(file)
     } else {
       alert('No file selected.')
     }
@@ -176,7 +171,7 @@ const Home = () => {
               >
                 <input type='file' id='inputFile' />
                 <Box
-                  onClick={handleFileChange}
+                  onClick={() => handleFileChange()}
                   sx={{
                     backgroundColor: '#999',
                     width: 'fit-content',
