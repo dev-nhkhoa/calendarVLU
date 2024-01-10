@@ -40,6 +40,7 @@ export const toCSV = (array) => {
       rows = ''
     }
   }
+  console.log(array)
   return result
 }
 export function calcDate(dayOfWeek, weekNumber) {
