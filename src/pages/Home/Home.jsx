@@ -26,8 +26,12 @@ const Home = () => {
         const worksheet = workbook.Sheets[sheetName]
 
         const jsonData = utils.sheet_to_json(worksheet)
-
-        downloadFile(toCSV(jsonData), 'output.csv')
+        try {
+          downloadFile(toCSV(jsonData), 'output.csv')
+          alert('Thành Công!')
+        } catch (error) {
+          alert(error)
+        }
       }
       reader.readAsArrayBuffer(file)
     } else {

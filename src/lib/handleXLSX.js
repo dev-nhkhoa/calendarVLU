@@ -26,7 +26,6 @@ export const toCSV = (array) => {
   let rows = ''
   result += header.join(', ')
   const sub = subjects(array)
-  // console.log(sub)
 
   for (let i = 0; i < sub.length; i++) {
     for (let k = 0; k < sub[i].week.length; k++) {
@@ -38,7 +37,6 @@ export const toCSV = (array) => {
         parseInt(sub[i].week[k])
       )}, ${sub[i].time[1]}, FALSE, , , \n`
       result += rows
-      // console.log(rows)
       rows = ''
     }
   }
@@ -82,23 +80,41 @@ const convertDate = (date) => {
 }
 
 const convertTime = (time) => {
-  switch (time) {
-    case 1:
-    case '1 - 3':
-      return ['7:00 AM', '9:30 AM']
-    case 4:
-    case '4 - 6':
-      return ['9:30 AM', '12:00 PM']
-    case 7:
-    case '7 - 9':
-      return ['1:00 PM', '3:30 PM']
-    case 10:
-    case '10 - 12':
-      return ['3:30 PM', '6:00 PM']
-    case 13:
-    case '13 - 15':
-      return ['6:00 PM', '8:30 PM']
+  const convert2Time = (num) => {
+    switch (num) {
+      case 1:
+        return '7:00 AM'
+      case 2:
+        return '8:15 AM'
+      case 3:
+        return '9:30 AM'
+      case 4:
+        return '9:30 AM'
+      case 5:
+        return '10:45 AM'
+      case 6:
+        return '12:00 PM'
+      case 7:
+        return '1:00 PM'
+      case 8:
+        return '2:15 pM'
+      case 9:
+        return '3:30 PM'
+      case 10:
+        return '3:30 PM'
+      case 11:
+        return '4:45 PM'
+      case 12:
+        return '6:00 PM'
+      case 13:
+        return '6:00 PM'
+      case 14:
+        return '7:15 PM'
+      case 15:
+        return '8:30 PM'
+    }
   }
+  return time.split('-').map((item) => convert2Time(parseInt(item)))
 }
 
 const convertRoom = (room) => {
@@ -116,23 +132,20 @@ export const subjects = (array) => {
       name: getSubjects(array)[i],
       date: convertDate(getDate(array)[i]),
       room: convertRoom(getRoom(array)[i]),
-      time: convertTime(getTimeStart(array)[i]),
+      time: convertTime(getTime(array)[i]),
       week: getWeek(array)[i].toString().split(',')
     })
   }
-  console.log(subjects)
   return subjects
 }
 
 export const getIndexSubjectName = (array) => {
   let result = []
-
-  for (let i = 0; i < array.length; i++) {
+  for (let i = 1; i <= array.length - 1; i++) {
     if (array[i]['Năm học: 2023-2024 - Học kỳ: HK02'] !== undefined) {
-      result.push(array.indexOf(array[i]))
+      result.push(i)
     }
   }
-  result.push(array.length - 1)
   return result
 }
 
@@ -140,9 +153,14 @@ export const getSubjects = (array) => {
   let listSubjects = []
   let subjectName = ''
   const index = getIndexSubjectName(array)
-  // console.log(index)
 
-  for (let k = 0; k < index.length; k++) {
+  for (let k = 0; k <= index.length; k++) {
+    if (k === index.length) {
+      subjectName += array[index[k - 1]]['__EMPTY_1']
+      listSubjects.push(subjectName)
+      subjectName = ''
+      break
+    }
     for (let i = index[k]; i < index[k + 1]; i++) {
       if (array[i]['__EMPTY_1'] === undefined) continue
       subjectName += array[i]['__EMPTY_1'] + ' '
@@ -172,6 +190,31 @@ export const getDate = (array) => {
     result.push(array[index[i]]['__EMPTY_4'])
   }
   return result.filter((r) => r !== undefined).filter((r) => r !== 'Thứ')
+}
+
+export const getTime = (array) => {
+  let listTimes = []
+  let timeName = ''
+  const index = getIndexSubjectName(array)
+
+  for (let k = 0; k <= index.length; k++) {
+    if (k === index.length) {
+      timeName += array[index[k - 1]]['__EMPTY_5']
+      listTimes.push(timeName)
+      timeName = ''
+      break
+    }
+    for (let i = index[k]; i < index[k + 1]; i++) {
+      if (array[i]['__EMPTY_5'] === undefined) continue
+      timeName += array[i]['__EMPTY_5'] + ' '
+    }
+    listTimes.push(timeName)
+    timeName = ''
+  }
+  return listTimes
+    .filter((subject) => subject.length > 0)
+    .filter((subject) => subject !== 'Tiết ')
+    .filter((subject) => subject !== 'undefined ')
 }
 
 export const getTimeStart = (array) => {
