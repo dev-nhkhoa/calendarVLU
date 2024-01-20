@@ -30,13 +30,13 @@ export const toCSV = (array) => {
 
   for (let i = 0; i < sub.length; i++) {
     for (let k = 0; k < sub[i].week.length; k++) {
-      rows += `${sub[i].name + sub[i].room}, ${calcDate(
+      rows += `${sub[i].name}, ${calcDate(
         sub[i].date,
         parseInt(parseInt(sub[i].week[k]))
       )}, ${sub[i].time[0]}, ${calcDate(
         sub[i].date,
         parseInt(sub[i].week[k])
-      )}, ${sub[i].time[1]}, FALSE, , , \n`
+      )}, ${sub[i].time[1]}, FALSE, , ${sub[i].room}, \n`
       result += rows
       rows = ''
     }
