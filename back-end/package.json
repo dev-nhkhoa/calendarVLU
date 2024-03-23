@@ -1,5 +1,6 @@
 {
   "name": "back-end",
+  "type": "module",
   "version": "1.0.0",
   "description": "back-end for calenVLU",
   "main": "server.js",
@@ -10,7 +11,10 @@
   "author": "nhkhoa",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
     "express": "^4.19.1",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "tabletojson": "^4.1.3"
   }
 }
