@@ -7,8 +7,6 @@ import * as path from 'path'
 const app = express()
 const port = 3000
 
-let cookieID = ''
-
 const fileHTML = 'file.html'
 const fileJSON = 'converted.json'
 
@@ -21,18 +19,22 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
   unlinkFILE()
   fetch('https://online.vlu.edu.vn').then((response) => {
-    cookieID = response.headers.getSetCookie().toString().split(';')[0]
-    res.send(`Lưu cookieID thành công!: ${cookieID}`)
+    res.send(response.headers.getSetCookie().toString().split(';')[0])
   })
 })
 
-app.get('/json', (req, res) => {
+app.get('/table', (req, res) => {
   const myHeaders = new Headers()
-  myHeaders.append('Cookie', cookieID)
+  const cookie = req.headers['cookievlu']
+  const user = req.headers['txttaikhoan']
+  const pass = req.headers['txtmatkhau']
+  const year = req.headers['year']
+  const hk = req.headers['hk']
+  myHeaders.append('Cookie', cookie)
 
   const formdata = new FormData()
-  formdata.append('txtTaiKhoan', '2274802010428')
-  formdata.append('txtMatKhau', 'khoa@vanlang@2701')
+  formdata.append('txtTaiKhoan', user)
+  formdata.append('txtMatKhau', pass)
 
   const requestOptions = {
     method: 'POST',
@@ -41,15 +43,14 @@ app.get('/json', (req, res) => {
     redirect: 'follow'
   }
 
-  const convert2JSON = () => {
+  const convert2JSON = (result) => {
     const html = fs.readFileSync(path.resolve(process.cwd(), `./${fileHTML}`), {
       encoding: 'utf-8'
     })
 
     const converted = tabletojson.convert(html)
-    console.log(converted)
 
-    fs.writeFile(fileJSON, JSON.stringify(converted, null, 2), (err) => {
+    fs.writeFileSync(fileJSON, JSON.stringify(converted, null, 2), (err) => {
       if (err) {
         console.error(err)
       } else {
@@ -57,21 +58,25 @@ app.get('/json', (req, res) => {
       }
     })
 
-    res.send(converted)
+    fs.readFileSync(path.resolve(process.cwd(), `./${fileJSON}`), {
+      encoding: 'utf-8'
+    }).length == 2
+      ? res.send('Đăng nhập thất bại!')
+      : res.send(result)
   }
 
   fetch('https://online.vlu.edu.vn/login', requestOptions)
     .then((response) => response.text())
     .then((result) => {
-      const requestOptions = {
+      const requestOptions2 = {
         method: 'GET',
         headers: myHeaders,
         redirect: 'follow'
       }
 
       fetch(
-        'https://online.vlu.edu.vn/Home/DrawingStudentSchedule_Perior?YearStudy=2023-2024&TermID=HK02',
-        requestOptions
+        `https://online.vlu.edu.vn/Home/DrawingStudentSchedule_Perior?YearStudy=${year}&TermID=${hk}`,
+        requestOptions2
       )
         .then((response) => response.text())
         .then((result) => {
@@ -83,11 +88,18 @@ app.get('/json', (req, res) => {
               console.log('File html đã được lưu')
             }
           })
-          convert2JSON()
+          convert2JSON(result)
         })
         .catch((error) => console.error(error))
     })
     .catch((error) => console.error(error))
+})
+
+app.get('/json', (req, res) => {
+  const data = fs.readFileSync(path.resolve(process.cwd(), `./${fileJSON}`), {
+    encoding: 'utf-8'
+  })
+  res.send(data)
 })
 
 const unlinkFILE = () => {
