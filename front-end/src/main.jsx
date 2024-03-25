@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Home from './pages/Home/Home'
 import { experimental_extendTheme as extendTheme } from '@mui/material'
@@ -28,10 +27,8 @@ const router = createBrowserRouter([
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <RouterProvider router={router}>
-      <CssBaseline />
-      <MuiProvider theme={theme} />
-    </RouterProvider>
-  </React.StrictMode>
+  <RouterProvider router={router}>
+    <CssBaseline />
+    <MuiProvider theme={theme} />
+  </RouterProvider>
 )

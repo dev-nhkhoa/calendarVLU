@@ -1,11 +1,30 @@
-import { Box, Container } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 
 import Header from './Sections/Header'
 import Introduction from './Sections/Introduction'
-import Tutorial from './Sections/Tutorial/Tutorial'
 import TrobleshootAndQuestion from './Sections/TrobleshootAndQuestion'
+import Login from '../Login/Login'
+import React from 'react'
+import Error from '../Error'
 
 const Home = () => {
+  const [isSvOK, setIsSvOK] = React.useState(true)
+  const [cookie, setCookie] = React.useState('')
+
+  React.useEffect(() => {
+    const checkConnect = async () => {
+      try {
+        const connect = await fetch('http://localhost:3000')
+        const getCookie = await connect.text()
+        setCookie(getCookie)
+      } catch (error) {
+        setIsSvOK(false)
+        alert('SV hiện không hoạt động! Vui lòng liên hệ DEV', error)
+      }
+    }
+    checkConnect()
+  }, [])
+
   return (
     <Container
       sx={{
@@ -25,7 +44,7 @@ const Home = () => {
       >
         <Header />
         <Introduction />
-        <Tutorial />
+        {isSvOK ? <Login cookie={cookie} /> : <Error />}
         <TrobleshootAndQuestion />
       </Box>
     </Container>

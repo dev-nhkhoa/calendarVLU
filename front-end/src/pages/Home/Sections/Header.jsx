@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import { version } from '../../../../package.json'
 
 const Header = () => {
   return (
@@ -17,7 +18,7 @@ const Header = () => {
           fontFamily: 'Inter'
         }}
       >
-        VLU CALENDAR GENERATOR
+        calenVLU - V{version}
       </Typography>
     </Box>
   )

@@ -1,4 +1,15 @@
 import { Box, Typography } from '@mui/material'
+import { LANG } from '~/lib/language'
+
+const listTINHNANG = (name, version) => {
+  return (
+    <Typography
+      sx={{ fontSize: '16px', fontWeight: '400', textIndent: '12px' }}
+    >
+      {name}: {version}
+    </Typography>
+  )
+}
 
 const Introduction = () => {
   return (
@@ -15,36 +26,20 @@ const Introduction = () => {
           Đây là gì?
         </Typography>
         <Typography
-          sx={{
-            textIndent: '10px',
-            textAlign: 'justify'
-          }}
+          sx={{ fontSize: '16px', fontWeight: '400', textIndent: '12px' }}
         >
-          Xin chào! Mình là{' '}
-          <Typography sx={{ color: '#731CFF', display: 'inline' }}>
-            VLU CALENDAR GENERATOR
-          </Typography>
-          . Mình được sinh ra để giúp bạn tạo lịch từ trang{' '}
-          <a
-            href='https://online.vlu.edu.vn/Home/Schedules'
-            target='_blank'
-            rel='noreferre noreferrer'
-          >
-            online.vlu.edu.vn
-          </a>{' '}
-          sang{' '}
-          <a
-            href='https://calendar.google.com/calendar/u/0/r'
-            target='_blank'
-            rel='noreferre noreferrer'
-          >
-            Google Calendar
-          </a>{' '}
-          với mục đích là thuận tiện xem lịch học của mình. Vì mỗi lần bạn muốn
-          xem lịch học của mình thì phải mất tầm 3-4p để đăng nhập, còn nếu bạn
-          tự điền lịch lên Google Calendar thì sẽ tốn thời gian của bạn. Mình ở
-          đây để giúp các bạn :D
+          {LANG.introduce}
         </Typography>
+        <Typography sx={{ fontSize: '12px', fontWeight: 'bold' }}>
+          Tính năng:
+        </Typography>
+        <ul>
+          {LANG.tinhNang.map((TINHNANG) => (
+            <li key={TINHNANG.key}>
+              {TINHNANG.name} (Version: {TINHNANG.atVersion})
+            </li>
+          ))}
+        </ul>
       </Box>
     </Box>
   )
