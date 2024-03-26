@@ -30,6 +30,7 @@ app.get('/table', (req, res) => {
   const pass = req.headers['txtmatkhau']
   const year = req.headers['year']
   const hk = req.headers['hk']
+  const lich = req.headers['lich']
   myHeaders.append('Cookie', cookie)
 
   const formdata = new FormData()
@@ -75,7 +76,7 @@ app.get('/table', (req, res) => {
       }
 
       fetch(
-        `https://online.vlu.edu.vn/Home/DrawingStudentSchedule_Perior?YearStudy=${year}&TermID=${hk}`,
+        `https://online.vlu.edu.vn/Home/${lich}?YearStudy=${year}&TermID=${hk}`,
         requestOptions2
       )
         .then((response) => response.text())
