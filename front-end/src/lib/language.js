@@ -8,5 +8,11 @@ export const LANG = {
       atVersion: '1.0'
     }
   ],
-  WnA: [{ Question: '', Answer: '' }]
+  WnA: [
+    {
+      Question: 'Server không hoạt động khi reload lại?',
+      Answer:
+        'Bạn hãy thử reload lại nhiều lần. Bug này mình sẽ sớm fix trong tương lai.'
+    }
+  ]
 }
