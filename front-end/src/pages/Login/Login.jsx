@@ -2,6 +2,7 @@ import { Box, Button, Container, Typography } from '@mui/material'
 import React from 'react'
 import { createHKARRAY, createYearARRAY } from '~/lib/utils'
 import Error from '../Error'
+import { setupLichHoc, setupLichThi } from '~/lib/handleJSON'
 
 const CalenTABLE = ({ data }) => {
   return (
@@ -10,7 +11,7 @@ const CalenTABLE = ({ data }) => {
       style={{
         px: '-10px',
         maxHeight: '300px',
-        width: '300px',
+        width: '400px',
         overflow: 'auto'
       }}
     />
@@ -21,10 +22,19 @@ const Login = ({ cookie }) => {
   const [json, setJSON] = React.useState('')
   const [isSvOK, setIsOK] = React.useState(true)
   const [isLogin, setIsLogin] = React.useState(false)
+  const [isLichTHI, setIsLichTHI] = React.useState(false)
 
   const handleExportCSV = async () => {
     const responce = await fetch('http://localhost:3000/json')
-    const calendar = await JSON.parse(responce.text())
+    const calendar = await responce.text()
+    const calendarJSON = await JSON.parse(calendar)
+    if (isLichTHI) {
+      //  xử lý tải lịch thi
+      setupLichThi(calendarJSON)
+      return
+    }
+    // xử lý tải lịch học
+    setupLichHoc(calendarJSON)
   }
 
   const handleLogin = async () => {
@@ -36,6 +46,13 @@ const Login = ({ cookie }) => {
     const dropdownHK = document.getElementById('dropdown-hk')
     const hk = dropdownHK.options[dropdownHK.selectedIndex].value
 
+    const dropdownLICH = document.getElementById('dropdown-lich')
+    const lich = dropdownLICH.options[dropdownLICH.selectedIndex].value
+
+    if (lich == 'ShowExam') {
+      setIsLichTHI(true)
+    }
+
     try {
       const userFetch = await fetch('http://localhost:3000/table', {
         method: 'GET',
@@ -44,7 +61,8 @@ const Login = ({ cookie }) => {
           txtTaiKhoan: user,
           txtMatKhau: pass,
           year: year,
-          hk: hk
+          hk: hk,
+          lich: lich
         }
       })
 
@@ -66,7 +84,7 @@ const Login = ({ cookie }) => {
         borderRadius: '16px',
         textAlign: 'center',
         justifyContent: 'center',
-        width: '300px'
+        width: '400px'
       }}
     >
       <Container
@@ -139,6 +157,20 @@ const Login = ({ cookie }) => {
               </select>
             </Box>
           </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'left',
+              alignItems: 'center'
+            }}
+          >
+            {/* Chọn lịch học */}
+            <p>Loại lịch:</p>
+            <select id='dropdown-lich' style={{ height: '20px' }}>
+              <option value={'DrawingStudentSchedule_Perior'}>Lịch học</option>
+              <option value={'ShowExam'}>Lịch thi</option>
+            </select>
+          </Box>
           <Button variant='contained' onClick={handleLogin}>
             Đăng nhập
           </Button>
@@ -157,11 +189,11 @@ const Login = ({ cookie }) => {
             Export file .csv
           </Button>
         ) : null}
-        {isLogin ? (
+        {/* {isLogin ? (
           <Button variant='contained' onClick={() => {}}>
             Lấy link .ical
           </Button>
-        ) : null}
+        ) : null} */}
       </Container>
     </Container>
   )

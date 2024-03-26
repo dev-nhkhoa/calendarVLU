@@ -6,17 +6,6 @@ export const LANG = {
       key: 1,
       name: 'Chuyển đổi lịch thủ công sang Google Calendar',
       atVersion: '1.0'
-    },
-    { key: 2, name: 'Chuyển đổi lịch thủ công sang Outlook', atVersion: '1.0' },
-    {
-      key: 3,
-      name: 'Đồng bộ lịch từ Online -> Google Calendar',
-      atVersion: '2.0 (not avaiable)'
-    },
-    {
-      key: 4,
-      name: 'Đồng bộ lịch từ Online -> Outlook',
-      atVersion: '2.0 (not avaiable)'
     }
   ],
   WnA: [{ Question: '', Answer: '' }]
