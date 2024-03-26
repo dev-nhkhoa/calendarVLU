@@ -6,6 +6,7 @@ import TrobleshootAndQuestion from './Sections/TrobleshootAndQuestion'
 import Login from '../Login/Login'
 import React from 'react'
 import Error from '../Error'
+import Tutorial from './Sections/Tutorial/Tutorial'
 
 const Home = () => {
   const [isSvOK, setIsSvOK] = React.useState(true)
@@ -45,6 +46,8 @@ const Home = () => {
         <Header />
         <Introduction />
         {isSvOK ? <Login cookie={cookie} /> : <Error />}
+        {/* TODO: ADD  */}
+        {/* <Tutorial /> */}
         <TrobleshootAndQuestion />
       </Box>
     </Container>
