@@ -1,4 +1,8 @@
 # Logs
+
+file.html
+converted.json
+
 logs
 *.log
 npm-debug.log*

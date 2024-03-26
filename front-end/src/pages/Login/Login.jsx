@@ -3,6 +3,7 @@ import React from 'react'
 import { createHKARRAY, createYearARRAY } from '~/lib/utils'
 import Error from '../Error'
 import { setupLichHoc, setupLichThi } from '~/lib/handleJSON'
+import { LANG } from '~/lib/language'
 
 const CalenTABLE = ({ data }) => {
   return (
@@ -25,7 +26,7 @@ const Login = ({ cookie }) => {
   const [isLichTHI, setIsLichTHI] = React.useState(false)
 
   const handleExportCSV = async () => {
-    const responce = await fetch('http://localhost:3000/json')
+    const responce = await fetch(`${LANG.link}/json`)
     const calendar = await responce.text()
     const calendarJSON = await JSON.parse(calendar)
     if (isLichTHI) {
@@ -54,7 +55,7 @@ const Login = ({ cookie }) => {
     }
 
     try {
-      const userFetch = await fetch('http://localhost:3000/table', {
+      const userFetch = await fetch(`${LANG.link}/table`, {
         method: 'GET',
         headers: {
           cookievlu: cookie,

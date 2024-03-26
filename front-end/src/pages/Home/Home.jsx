@@ -6,7 +6,8 @@ import TrobleshootAndQuestion from './Sections/TrobleshootAndQuestion'
 import Login from '../Login/Login'
 import React from 'react'
 import Error from '../Error'
-import Tutorial from './Sections/Tutorial/Tutorial'
+import { LANG } from '~/lib/language'
+// import Tutorial from './Sections/Tutorial/Tutorial'
 
 const Home = () => {
   const [isSvOK, setIsSvOK] = React.useState(true)
@@ -15,7 +16,7 @@ const Home = () => {
   React.useEffect(() => {
     const checkConnect = async () => {
       try {
-        const connect = await fetch('http://localhost:3000')
+        const connect = await fetch(`${LANG.link}`)
         const getCookie = await connect.text()
         setCookie(getCookie)
       } catch (error) {
