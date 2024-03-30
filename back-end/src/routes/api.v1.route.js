@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 
 const {
   unlinkFiles,
@@ -8,6 +9,8 @@ const {
 } = require('../utils/handleFiles')
 
 const router = express.Router()
+
+router.use(cors())
 
 router.get('/', (req, res, next) => {
   res.send('CalenVLU APIs V1 is working correctly!')
