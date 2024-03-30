@@ -16,14 +16,14 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-app.get('/', (req, res) => {
+app.get('/get-cookie', (req, res) => {
   unlinkFILE()
   fetch('https://online.vlu.edu.vn').then((response) => {
     res.send(response.headers.getSetCookie().toString().split(';')[0])
   })
 })
 
-app.get('/table', (req, res) => {
+app.get('/get-calendar', (req, res) => {
   const myHeaders = new Headers()
   const cookie = req.headers['cookievlu']
   const user = req.headers['txttaikhoan']
@@ -96,7 +96,7 @@ app.get('/table', (req, res) => {
     .catch((error) => console.error(error))
 })
 
-app.get('/json', (req, res) => {
+app.get('/get-calendar-json', (req, res) => {
   const data = fs.readFileSync(path.resolve(process.cwd(), `./${fileJSON}`), {
     encoding: 'utf-8'
   })
