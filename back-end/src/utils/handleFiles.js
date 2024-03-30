@@ -3,8 +3,11 @@ const fs = require('fs')
 const path = require('path')
 require('dotenv').config()
 
+const fileHTML = process.env.FILE_HTML
+const fileJSON = process.env.FILE_JSON
+
 const unlinkFiles = () => {
-  fs.unlink(process.env.FILE_HTML, (err) => {})
+  fs.unlink(fileHTML, (err) => {})
   fs.unlink(process.env.FILE_JSON, (err) => {})
 }
 
@@ -12,7 +15,7 @@ const unlinkFiles = () => {
 // return lại table để hiển thị cho user bên FE hoặc string thông báo đăng nhập thất bại
 const convertTable2JSON = (HTMLTable) => {
   const locateFile = fs.readFileSync(
-    path.resolve(process.cwd(), `./${process.env.FILE_HTML}`),
+    path.resolve(process.cwd(), `./${fileHTML}`),
     {
       encoding: 'utf-8'
     }
@@ -21,16 +24,12 @@ const convertTable2JSON = (HTMLTable) => {
   const converted = tabletojson.convert(locateFile)
 
   // Save file converted.json
-  fs.writeFileSync(
-    process.env.FILE_JSON,
-    JSON.stringify(converted, null, 2),
-    (err) => {
-      if (err) console.error(err)
-    }
-  )
+  fs.writeFileSync(fileJSON, JSON.stringify(converted, null, 2), (err) => {
+    if (err) console.error(err)
+  })
 
   if (
-    fs.readFileSync(path.resolve(process.cwd(), `./${process.env.FILE_JSON}`), {
+    fs.readFileSync(path.resolve(process.cwd(), `./${fileJSON}`), {
       encoding: 'utf-8'
     }).length == 2
   ) {
