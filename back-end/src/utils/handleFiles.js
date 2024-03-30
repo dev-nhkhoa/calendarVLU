@@ -3,8 +3,8 @@ const fs = require('fs')
 const path = require('path')
 require('dotenv').config()
 
-const fileHTML = process.env.FILE_HTML
-const fileJSON = process.env.FILE_JSON
+const fileHTML = process.env.FILE_HTML || 'file.html'
+const fileJSON = process.env.FILE_JSON || 'converted.json'
 
 const unlinkFiles = () => {
   fs.unlink(fileHTML, (err) => {})
