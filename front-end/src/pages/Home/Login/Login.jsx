@@ -39,8 +39,14 @@ export default function Login() {
 
     try {
       // lấy cookie từ trang web online.vlu.edu.vn dùng để đăng nhập
-      const getCookie = await axios.get(`${LANG.link}/api/v1/get-cookie`)
-      const cookie = await getCookie.data
+      const getCookie = await fetch(`${LANG.link}/api/v1/get-cookie`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
+        }
+      })
+      const cookie = await getCookie.text()
 
       // thực hiện đăng nhập bằng cách dùng cookie đã lấy
       const getCalendar = await fetch(`${LANG.link}/api/v1/get-calendar`, {
@@ -51,7 +57,10 @@ export default function Login() {
           'calenvlu-password': password,
           'calenvlu-year': year,
           'calenvlu-period': period,
-          'calenvlu-lichhoc': lichHoc
+          'calenvlu-lichhoc': lichHoc,
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
         }
       })
 
