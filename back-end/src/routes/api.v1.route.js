@@ -1,5 +1,4 @@
 const express = require('express')
-const cors = require('cors')
 
 const {
   unlinkFiles,
@@ -9,8 +8,6 @@ const {
 } = require('../utils/handleFiles')
 
 const router = express.Router()
-
-router.use(cors())
 
 router.get('/', (req, res, next) => {
   res.send('CalenVLU APIs V1 is working correctly!')
@@ -35,6 +32,9 @@ router.get('/get-calendar', async (req, res) => {
   const lichHoc = responseHeader['calenvlu-lichhoc']
 
   const applyCookieHeader = new Headers()
+  // applyCookieHeader.append('Content-Type', 'application/json')
+  // applyCookieHeader.append('Access-Control-Allow-Origin', '*')
+  // applyCookieHeader.append('Access-Control-Allow-Methods', 'POST,PATCH,OPTIONS')
   applyCookieHeader.append('Cookie', cookie)
 
   const applyAuth = new FormData()
