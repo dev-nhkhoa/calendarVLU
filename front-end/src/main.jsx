@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client'
-import Home from './pages/HomeV2/Home'
+import Home from './pages/Home/Home'
 import { experimental_extendTheme as extendTheme } from '@mui/material'
 import { Experimental_CssVarsProvider as MuiProvider } from '@mui/material'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
