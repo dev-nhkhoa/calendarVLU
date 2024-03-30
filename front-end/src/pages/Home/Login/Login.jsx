@@ -1,5 +1,4 @@
 import { Box, CircularProgress, Typography } from '@mui/material'
-import axios from 'axios'
 import { useState } from 'react'
 import { setupLichHoc, setupLichThi } from '~/lib/handleJSON'
 import { LANG } from '~/lib/language'
