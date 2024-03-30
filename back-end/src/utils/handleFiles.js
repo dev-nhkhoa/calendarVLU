@@ -8,7 +8,7 @@ const fileJSON = process.env.FILE_JSON || 'converted.json'
 
 const unlinkFiles = () => {
   fs.unlink(fileHTML, (err) => {})
-  fs.unlink(process.env.FILE_JSON, (err) => {})
+  fs.unlink(fileJSON, (err) => {})
 }
 
 // Hàm convert HTML table -> json
