@@ -2,6 +2,7 @@
 
 file.html
 converted.json
+.env
 
 logs
 *.log
