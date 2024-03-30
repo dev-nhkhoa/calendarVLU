@@ -39,19 +39,19 @@ export default function Login() {
 
     try {
       // lấy cookie từ trang web online.vlu.edu.vn dùng để đăng nhập
-      const getCookie = await axios.get(`${LANG.link}/get-cookie`)
+      const getCookie = await axios.get(`${LANG.link}/api/v1/get-cookie`)
       const cookie = await getCookie.data
 
       // thực hiện đăng nhập bằng cách dùng cookie đã lấy
-      const getCalendar = await fetch(`${LANG.link}/get-calendar`, {
+      const getCalendar = await fetch(`${LANG.link}/api/v1/get-calendar`, {
         method: 'GET',
         headers: {
-          cookievlu: cookie,
-          txtTaiKhoan: '2274802010428',
-          txtMatKhau: 'khoa@vanlang@2701',
-          year: year,
-          hk: period,
-          lich: lichHoc
+          'calenvlu-cookie': cookie,
+          'calenvlu-username': username,
+          'calenvlu-password': password,
+          'calenvlu-year': year,
+          'calenvlu-period': period,
+          'calenvlu-lichhoc': lichHoc
         }
       })
 
@@ -65,7 +65,7 @@ export default function Login() {
   }
 
   const handleExportCSV = async () => {
-    const responce = await fetch(`${LANG.link}/get-calendar-json`)
+    const responce = await fetch(`${LANG.link}/api/v1/get-calendar-json`)
     const calendar = await responce.text()
     const calendarJSON = await JSON.parse(calendar)
     if (isLichTHI) {
