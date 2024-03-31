@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { setupLichHoc, setupLichThi } from '~/lib/handleJSON'
 import { LANG } from '~/lib/language'
 import { createHKARRAY, createYearARRAY } from '~/lib/utils'
+import { useNavigate } from 'react-router-dom'
 
 const CalendarHTML = ({ data }) => {
   return (
@@ -21,6 +22,8 @@ export default function Login() {
   const [onLoad, setOnLoad] = useState(false)
   const [calendar, setCalendar] = useState()
   const [isLichTHI, setIsLichTHI] = useState(false)
+
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -153,7 +156,9 @@ export default function Login() {
           <CalendarHTML data={calendar} />
           {calendar !== 'Đăng nhập thất bại!' ? (
             <>
-              <button>Kết nối TKB với Google Calendar</button>
+              <button onClick={() => navigate('/calendar-login')}>
+                Kết nối TKB với Google Calendar
+              </button>
               <button onClick={handleExportCSV}>
                 Xuất file thời khóa biểu
               </button>

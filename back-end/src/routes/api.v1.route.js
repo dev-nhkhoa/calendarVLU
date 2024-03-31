@@ -69,7 +69,7 @@ router.get('/get-calendar', async (req, res) => {
 })
 
 router.get('/get-calendar-json', (req, res) => {
-  res.send(readFile())
+  res.send(readFile(fileJSON))
 })
 
 module.exports = router
