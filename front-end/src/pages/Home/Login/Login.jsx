@@ -40,7 +40,7 @@ export default function Login() {
       // lấy cookie từ trang web online.vlu.edu.vn dùng để đăng nhập
       const getCookie = await fetch(`${LANG.link}/api/v1/get-cookie`)
 
-      const cookie = await getCookie.data
+      const cookie = await getCookie.text()
 
       // thực hiện đăng nhập bằng cách dùng cookie đã lấy
       const getCalendar = await fetch(`${LANG.link}/api/v1/get-calendar`, {
@@ -55,7 +55,7 @@ export default function Login() {
         }
       })
 
-      const calendar = await getCalendar.data
+      const calendar = await getCalendar.text()
       setOnLoad(false)
       setCalendar(calendar)
     } catch (error) {
