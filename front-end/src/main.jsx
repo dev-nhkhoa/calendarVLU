@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom/client'
 import Home from './pages/Home/Home'
 import { experimental_extendTheme as extendTheme } from '@mui/material'
 import { Experimental_CssVarsProvider as MuiProvider } from '@mui/material'
-import '@fontsource/inter'
 import { CssBaseline } from '@mui/material'
 
 export const colors = { main: '#fff', bg: '#000' }
