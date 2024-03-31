@@ -1,6 +1,8 @@
 {
   "name": "back-end",
   "version": "2.0.0",
+  "proxy": "https://calendarvlu.onrender.com",
+  "homepage": "calen-vlu.vercel.app",
   "description": "back-end for calenVLU",
   "main": "App.js",
   "scripts": {
@@ -15,6 +17,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
     "googleapis": "^134.0.0",
+    "http-proxy-middleware": "^2.0.6",
     "nodemon": "^3.1.0",
     "tabletojson": "^4.1.3"
   }
