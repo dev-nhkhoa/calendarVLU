@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 
 const {
   unlinkFiles,
@@ -8,6 +9,9 @@ const {
 } = require('../utils/handleFiles')
 
 const router = express.Router()
+
+const fileHTML = process.env.FILE_HTML || 'file.html'
+const fileJSON = process.env.FILE_JSON || 'converted.json'
 
 router.get('/', (req, res, next) => {
   res.send('CalenVLU APIs V1 is working correctly!')
@@ -32,9 +36,6 @@ router.get('/get-calendar', async (req, res) => {
   const lichHoc = responseHeader['calenvlu-lichhoc']
 
   const applyCookieHeader = new Headers()
-  // applyCookieHeader.append('Content-Type', 'application/json')
-  // applyCookieHeader.append('Access-Control-Allow-Origin', '*')
-  // applyCookieHeader.append('Access-Control-Allow-Methods', 'POST,PATCH,OPTIONS')
   applyCookieHeader.append('Cookie', cookie)
 
   const applyAuth = new FormData()
@@ -59,7 +60,7 @@ router.get('/get-calendar', async (req, res) => {
 
   const HTMLTable = await getOnlineCalendar.text()
 
-  if (!saveFile(process.env.FILE_HTML, HTMLTable)) {
+  if (!saveFile(fileHTML, HTMLTable)) {
     console.log('Lỗi khi thực thi việc lưu file.html!')
     return
   } else {
@@ -68,7 +69,7 @@ router.get('/get-calendar', async (req, res) => {
 })
 
 router.get('/get-calendar-json', (req, res) => {
-  res.send(readFile(process.env.FILE_JSON))
+  res.send(readFile())
 })
 
 module.exports = router
