@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { setupLichHoc, setupLichThi } from '~/lib/handleJSON'
 import { LANG } from '~/lib/language'
 import { createHKARRAY, createYearARRAY } from '~/lib/utils'
+import axios from 'axios'
 
 const CalendarHTML = ({ data }) => {
   return (
@@ -38,32 +39,51 @@ export default function Login() {
 
     try {
       // lấy cookie từ trang web online.vlu.edu.vn dùng để đăng nhập
-      const getCookie = await fetch(`${LANG.link}/api/v1/get-cookie`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
-        }
+      const getCookie = await axios.get(`${LANG.link}/api/v1/get-cookie`, {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
       })
-      const cookie = await getCookie.text()
+
+      // const getCookie = await fetch(`${LANG.link}/api/v1/get-cookie`, {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
+      //   }
+      // })
+      const cookie = await getCookie.data
 
       // thực hiện đăng nhập bằng cách dùng cookie đã lấy
-      const getCalendar = await fetch(`${LANG.link}/api/v1/get-calendar`, {
-        method: 'GET',
-        headers: {
-          'calenvlu-cookie': cookie,
-          'calenvlu-username': username,
-          'calenvlu-password': password,
-          'calenvlu-year': year,
-          'calenvlu-period': period,
-          'calenvlu-lichhoc': lichHoc,
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
-        }
+      const getCalendar = await axios.get(`${LANG.link}/api/v1/get-calendar`, {
+        'calenvlu-cookie': cookie,
+        'calenvlu-username': username,
+        'calenvlu-password': password,
+        'calenvlu-year': year,
+        'calenvlu-period': period,
+        'calenvlu-lichhoc': lichHoc,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
       })
 
-      const calendar = await getCalendar.text()
+      // const getCalendar = await fetch(`${LANG.link}/api/v1/get-calendar`, {
+      //   method: 'GET',
+      //   headers: {
+      //     'calenvlu-cookie': cookie,
+      //     'calenvlu-username': username,
+      //     'calenvlu-password': password,
+      //     'calenvlu-year': year,
+      //     'calenvlu-period': period,
+      //     'calenvlu-lichhoc': lichHoc,
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Access-Control-Allow-Methods': 'POST,PATCH,OPTIONS'
+      //   }
+      // })
+
+      const calendar = await getCalendar.data
+      console.log(calendar)
       setOnLoad(false)
       setCalendar(calendar)
     } catch (error) {
