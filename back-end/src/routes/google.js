@@ -52,7 +52,7 @@ router.get('/calendar', async (req, res) => {
   const token = req.headers['vlu-token']
   const calendarName = req.headers['vlu-calendarname']
   const isLichThi = Boolean(req.headers['vlu-calendarname'])
-  const calendarJson = await JSON.parse(readFile(process.env.FILE_JSON))
+  const calendarJson = await JSON.parse(readFile('converted.json'))
   try {
     oauth2Client.setCredentials({ access_token: token })
     // Create a Google Calendar API client
