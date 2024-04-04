@@ -2,25 +2,47 @@ import { Container } from '@mui/material'
 import { colors } from '~/main'
 
 // pages
-import Login from './Login/Login'
+import Login from '~/pages/Login/Login'
 import Header from '~/components/Header'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import Calendar from '../Calendar/Calendar'
-
-const router = createBrowserRouter([
-  {
-    id: 'root',
-    path: '/',
-    element: <Login />
-  },
-  {
-    id: 'calendar-login',
-    path: '/calendar-login',
-    element: <Calendar />
-  }
-])
+import GoogleLogin from '../Google/GoogleLogin/GoogleLogin'
+import ImportCalendar from '../Google/ImportCalendar/ImportCalendar'
+import { useState } from 'react'
 
 const Home = () => {
+  const [calendar, setCalendar] = useState()
+  const [isLichThi, setLichThi] = useState(false)
+
+  const router = createBrowserRouter([
+    {
+      id: 'vlu-login',
+      path: '/vlu-login',
+      element: (
+        <Login
+          isLichThi={isLichThi}
+          setLichThi={setLichThi}
+          setCalendarJson={setCalendar}
+        />
+      )
+    },
+    {
+      id: 'root',
+      path: '/',
+      element: <GoogleLogin />
+    },
+    {
+      id: 'import-calendar',
+      path: '/import-calendar',
+      element: (
+        <ImportCalendar
+          calendar={calendar}
+          isLichThi={isLichThi}
+          setLichThi={setLichThi}
+          setCalendar={setCalendar}
+        />
+      )
+    }
+  ])
   return (
     <Container
       maxWidth={'100%'}

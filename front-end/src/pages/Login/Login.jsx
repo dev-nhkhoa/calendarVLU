@@ -18,12 +18,18 @@ const CalendarHTML = ({ data }) => {
   )
 }
 
-export default function Login() {
+export default function Login({ isLichThi, setLichThi, setCalendarJson }) {
   const [onLoad, setOnLoad] = useState(false)
   const [calendar, setCalendar] = useState()
-  const [isLichTHI, setIsLichTHI] = useState(false)
+  // const [isLichTHI, setIsLichTHI] = useState(false)
 
   const navigate = useNavigate()
+
+  const handleGoogleLogin = async () => {
+    const calenJson = await getJsonCalendar()
+    setCalendarJson(calenJson)
+    navigate('/import-calendar')
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -36,7 +42,7 @@ export default function Login() {
     const period = event.target.elements.selectPeriod.value
 
     if (lichHoc == 'ShowExam') {
-      setIsLichTHI(true)
+      setLichThi(true)
     }
 
     try {
@@ -67,17 +73,21 @@ export default function Login() {
     }
   }
 
-  const handleExportCSV = async () => {
+  const getJsonCalendar = async () => {
     const responce = await fetch(`${LANG.link}/api/v1/get-calendar-json`)
     const calendar = await responce.text()
     const calendarJSON = await JSON.parse(calendar)
-    if (isLichTHI) {
+    return calendarJSON
+  }
+
+  const handleExportCSV = async () => {
+    if (isLichThi) {
       //  xử lý tải lịch thi
-      setupLichThi(calendarJSON)
+      setupLichThi(await getJsonCalendar())
       return
     }
     // xử lý tải lịch học
-    setupLichHoc(calendarJSON)
+    setupLichHoc(await getJsonCalendar())
   }
 
   return (
@@ -156,7 +166,7 @@ export default function Login() {
           <CalendarHTML data={calendar} />
           {calendar !== 'Đăng nhập thất bại!' ? (
             <>
-              <button onClick={() => navigate('/calendar-login')}>
+              <button onClick={handleGoogleLogin}>
                 Kết nối TKB với Google Calendar
               </button>
               <button onClick={handleExportCSV}>
