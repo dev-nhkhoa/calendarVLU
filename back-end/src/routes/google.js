@@ -19,7 +19,8 @@ const oauth2Client = new google.auth.OAuth2(clientId, secrectId, redirectServer)
 router.get('/authenticate', (req, res) => {
   const url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
-    scope: 'https://www.googleapis.com/auth/calendar'
+    scope: 'https://www.googleapis.com/auth/calendar',
+    include_granted_scopes: true
   })
 
   res.redirect(url)
@@ -33,8 +34,9 @@ router.get('/get-token', (req, res) => {
       res.redirect(`${redirectClient}/`)
       return
     }
-    res.redirect(`${redirectClient}/vlu-login`)
     oauth2Client.setCredentials(tokens)
+    console.log('test')
+    res.redirect(`${redirectClient}/vlu-login`)
   })
 })
 
