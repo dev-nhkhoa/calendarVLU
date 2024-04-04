@@ -15,6 +15,8 @@ app.listen(PORT, () => {
 
 app.use('/api/v1/', require('./routes/api.v1.route'))
 
+app.use('/google/', require('./routes/google'))
+
 app.get('/', (req, res) => {
   res.send('CalenVLU Server is working good!')
 })
