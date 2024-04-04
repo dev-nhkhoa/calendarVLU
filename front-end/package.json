@@ -1,7 +1,8 @@
 {
   "name": "vlu-calender-2-gg-calender",
   "private": true,
-  "version": "1.5",
+  "version": "1.7",
+  "proxy": "https://calendarvlu.onrender.com",
   "type": "module",
   "scripts": {
     "dev": "vite",

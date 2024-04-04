@@ -15,7 +15,6 @@ const Home = () => {
 
   const router = createBrowserRouter([
     {
-      id: 'vlu-login',
       path: '/vlu-login',
       element: (
         <Login
@@ -31,7 +30,6 @@ const Home = () => {
       element: <GoogleLogin />
     },
     {
-      id: 'import-calendar',
       path: '/import-calendar',
       element: (
         <ImportCalendar
