@@ -33,8 +33,8 @@ router.get('/get-token', (req, res) => {
       res.redirect(`${redirectClient}/`)
       return
     }
-    oauth2Client.setCredentials(tokens)
     res.redirect(`${redirectClient}/vlu-login`)
+    oauth2Client.setCredentials(tokens)
   })
 })
 
