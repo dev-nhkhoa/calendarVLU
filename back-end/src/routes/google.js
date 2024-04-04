@@ -3,6 +3,15 @@ require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const { google } = require('googleapis')
+const {
+  readFile,
+  removeThings,
+  convertDate,
+  convertTime,
+  calcDate,
+  convertExamDate,
+  addTime
+} = require('../utils/handleFiles')
 const clientId = process.env.CLIENT_ID
 const secrectId = process.env.SECRET_ID
 const redirectServer =
@@ -28,16 +37,142 @@ router.get('/authenticate', (req, res) => {
 
 router.get('/get-token', (req, res) => {
   const code = req.query.code
-  oauth2Client.getToken(code, (err, tokens) => {
+  oauth2Client.getToken(code, (err, token) => {
     if (err) {
       console.log(err)
       res.redirect(`${redirectClient}/`)
       return
     }
-    oauth2Client.setCredentials(tokens)
-    console.log('test')
-    res.redirect(`${redirectClient}/vlu-login`)
+    oauth2Client.setCredentials(token)
+    res.redirect(`${redirectClient}/vlu-login?token=${token.access_token}`)
   })
 })
+
+router.get('/calendar', async (req, res) => {
+  const token = req.headers['vlu-token']
+  const calendarName = req.headers['vlu-calendarname']
+  const isLichThi = Boolean(req.headers['vlu-calendarname'])
+  const calendarJson = await JSON.parse(readFile(process.env.FILE_JSON))
+  try {
+    oauth2Client.setCredentials({ access_token: token })
+    // Create a Google Calendar API client
+    const calendar = google.calendar({ version: 'v3', auth: oauth2Client })
+
+    // Gửi yêu cầu tạo lịch mới
+    const createNewCalendar = await calendar.calendars.insert({
+      auth: oauth2Client,
+      requestBody: {
+        summary: calendarName,
+        timeZone: '+07:00'
+      }
+    })
+
+    const newCalendarId = await createNewCalendar.data.id
+
+    const newCalendar = await removeThings(calendarJson, isLichThi)
+
+    console.log(newCalendar)
+
+    for (let i = 0; i < newCalendar.length; i++) {
+      // Gửi yêu cầu thêm sự kiện mới
+      if (!isLichThi) {
+        const name = `${newCalendar[i]['Tên học phần']} - ${newCalendar[i]['Phòng']}`
+        const desc = `Giảng viên: ${newCalendar[i]['CBGD']} - Số tín chỉ: ${newCalendar[i]['STC']}`
+        const location = `${newCalendar[i]['Phòng']}`
+        const time = convertTime(newCalendar[i]['Tiết'])
+        const dayOfWeek = convertDate(newCalendar[i]['Thứ'])
+        const weekList = newCalendar[i]['Tuần'].split(',')
+        for (let k = 0; k < weekList.length; k++) {
+          const date = calcDate(dayOfWeek, weekList[k])
+
+          console.log('name: ' + name)
+          console.log('desc: ' + desc)
+          console.log('location: ' + location)
+          console.log('time: ' + time)
+          console.log('dayofweek: ' + dayOfWeek)
+          console.log('date: ' + date)
+
+          var textEvent = {
+            summary: name,
+            location: location,
+            description: desc,
+            start: {
+              dateTime: `${date}T${time[0]}+07:00`,
+              timeZone: 'Asia/Ho_Chi_Minh'
+            },
+            end: {
+              dateTime: `${date}T${time[1]}+07:00`,
+              timeZone: 'Asia/Ho_Chi_Minh'
+            },
+            reminders: {
+              useDefault: false,
+              overrides: [
+                { method: 'email', minutes: 24 * 60 },
+                { method: 'popup', minutes: 10 }
+              ]
+            }
+          }
+
+          calendar.events.insert({
+            calendarId: newCalendarId,
+            resource: textEvent
+          })
+          await sleep(500)
+        }
+      } else {
+        const handleLichthi = async () => {
+          // lichThi
+          const name = `${newCalendar[i]['Tên học phần']} - ${newCalendar[i]['Phòng thi']} - ${newCalendar[i]['Mã học phần']}`
+          const desc = `Kỳ thi: ${newCalendar[i]['Kỳ thi']} - Phòng thi:${newCalendar[i]['Địa điểm']} ${newCalendar[i]['Phòng thi']}`
+          const location = `${newCalendar[i]['Địa điểm']}`
+          const date = convertExamDate(newCalendar[i]['Ngày thi'])
+          const startTime = convertTime(newCalendar[i]['Giờ thi'], isLichThi)
+          const endTime = convertTime(
+            addTime(
+              newCalendar[i]['Giờ thi'],
+              newCalendar[i]['Thời gian làm bài (phút)']
+            ),
+            isLichThi
+          )
+
+          var textEvent = {
+            summary: name,
+            location: location,
+            description: desc,
+            start: {
+              dateTime: `${date}T${startTime}+07:00`,
+              timeZone: 'Asia/Ho_Chi_Minh'
+            },
+            end: {
+              dateTime: `${date}T${endTime}+07:00`,
+              timeZone: 'Asia/Ho_Chi_Minh'
+            },
+            reminders: {
+              useDefault: false,
+              overrides: [
+                { method: 'email', minutes: 24 * 60 },
+                { method: 'popup', minutes: 10 }
+              ]
+            }
+          }
+
+          calendar.events.insert({
+            calendarId: newCalendarId,
+            resource: textEvent
+          })
+        }
+
+        await sleep(500).then(handleLichthi())
+      }
+    }
+    res.send('Done!')
+  } catch (error) {
+    res.send(error)
+  }
+})
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 module.exports = router

@@ -27,10 +27,8 @@ router.get('/get-cookie', (req, res, next) => {
 router.get('/get-calendar', async (req, res) => {
   const responseHeader = req.headers
   const cookie = responseHeader['calenvlu-cookie']
-  const username =
-    responseHeader['calenvlu-username'] || process.env.TEST_ONLINE_USERNAME
-  const password =
-    responseHeader['calenvlu-password'] || process.env.TEST_ONLINE_PASSWORD
+  const username = responseHeader['calenvlu-username'] || process.env.USERNAME
+  const password = responseHeader['calenvlu-password'] || process.env.PASSWORD
   const year = responseHeader['calenvlu-year']
   const period = responseHeader['calenvlu-period']
   const lichHoc = responseHeader['calenvlu-lichhoc']
