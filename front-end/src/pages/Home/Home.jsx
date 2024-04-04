@@ -12,6 +12,7 @@ import { useState } from 'react'
 const Home = () => {
   const [calendar, setCalendar] = useState()
   const [isLichThi, setLichThi] = useState(false)
+  const [token, setToken] = useState()
 
   const router = createBrowserRouter([
     {
@@ -21,6 +22,7 @@ const Home = () => {
           isLichThi={isLichThi}
           setLichThi={setLichThi}
           setCalendarJson={setCalendar}
+          setToken={setToken}
         />
       )
     },
@@ -37,6 +39,7 @@ const Home = () => {
           isLichThi={isLichThi}
           setLichThi={setLichThi}
           setCalendar={setCalendar}
+          token={token}
         />
       )
     }

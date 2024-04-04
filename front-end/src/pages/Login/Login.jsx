@@ -18,7 +18,15 @@ const CalendarHTML = ({ data }) => {
   )
 }
 
-export default function Login({ isLichThi, setLichThi, setCalendarJson }) {
+export default function Login({
+  isLichThi,
+  setLichThi,
+  setCalendarJson,
+  setToken
+}) {
+  const params = new URLSearchParams(window.location.search)
+  const token = params.get('token')
+  setToken(token)
   const [onLoad, setOnLoad] = useState(false)
   const [calendar, setCalendar] = useState()
   // const [isLichTHI, setIsLichTHI] = useState(false)
