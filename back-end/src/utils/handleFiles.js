@@ -58,7 +58,9 @@ const readFile = (fileName) => {
 const removeThings = (data, isLichThi) => {
   const newData = data.flat()
   // xóa tiêu đề
-  if (isLichThi) newData.shift()
+  if (!isLichThi) {
+    newData.shift()
+  }
   return newData
 }
 
@@ -100,7 +102,7 @@ function calcDate(dayOfWeek, weekNumber, isLichThi) {
 }
 
 const convertTime = (time, isLichThi) => {
-  if (isLichThi) return time.replace('g', ':') + ':00'
+  if (isLichThi) return String(time).replace('g', ':') + ':00'
   const convert2Time = (num) => {
     switch (num) {
       case 1:
@@ -144,26 +146,27 @@ const convertExamDate = (date) => {
 }
 
 function addTime(time, add) {
-  if (add == '') {
-    return time
-  }
-  const aTime = String(time).split('g')
-  let plusHour = Math.floor(add / 60)
-  let plusMinute = add % 60
+  // Chuyển đổi chuỗi thời gian thành giờ và phút
+  const [hour, minute] = time.split('g').map(Number)
 
-  if (plusMinute + aTime[1] > 60) {
-    plusHour += 1
-    plusMinute = 60 - plusMinute
-  }
+  let totalHour = hour
+  let totalMinute = minute + add
 
-  if (plusHour >= 24) {
-    plusHour -= 24
+  // Xử lý trường hợp khi phút vượt quá 60
+  if (totalMinute >= 60) {
+    totalHour += Math.floor(totalMinute / 60)
+    totalMinute %= 60
   }
 
-  const newHour = parseInt(aTime[0]) + plusHour
-  const newMinute = parseInt(aTime[1]) + plusMinute
+  // Xử lý trường hợp khi giờ vượt quá 24
+  if (totalHour >= 24) {
+    totalHour %= 24
+  }
 
-  return `${newHour}g${newMinute}`
+  // Định dạng chuỗi kết quả
+  const result = `${totalHour}g${totalMinute}`
+
+  return result
 }
 
 module.exports = {

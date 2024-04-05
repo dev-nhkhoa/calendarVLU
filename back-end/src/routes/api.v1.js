@@ -1,24 +1,21 @@
-const express = require('express')
 require('dotenv').config()
 
+const express = require('express')
+const router = express.Router()
 const {
-  unlinkFiles,
   saveFile,
   convertTable2JSON,
   readFile
 } = require('../utils/handleFiles')
 
-const router = express.Router()
+const fileHTML = 'file.html'
+const fileJSON = 'converted.json'
 
-const fileHTML = process.env.FILE_HTML || 'file.html'
-const fileJSON = process.env.FILE_JSON || 'converted.json'
-
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   res.send('CalenVLU APIs V1 is working correctly!')
 })
 
 router.get('/get-cookie', (req, res, next) => {
-  unlinkFiles()
   fetch('https://online.vlu.edu.vn').then((response) => {
     res.send(response.headers.getSetCookie().toString().split(';')[0])
   })
@@ -27,12 +24,14 @@ router.get('/get-cookie', (req, res, next) => {
 router.get('/get-calendar', async (req, res) => {
   const responseHeader = req.headers
   const cookie = responseHeader['calenvlu-cookie']
-  const username = responseHeader['calenvlu-username'] || process.env.USERNAME
-  const password = responseHeader['calenvlu-password'] || process.env.PASSWORD
+  const username =
+    process.env.VLU_USERNAME || responseHeader['calenvlu-username']
+  const password =
+    process.env.VLU_PASSWORD || responseHeader['calenvlu-password']
   const year = responseHeader['calenvlu-year']
   const period = responseHeader['calenvlu-period']
   const lichHoc = responseHeader['calenvlu-lichhoc']
-
+  console.log(username)
   const applyCookieHeader = new Headers()
   applyCookieHeader.append('Cookie', cookie)
 

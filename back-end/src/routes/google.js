@@ -24,6 +24,9 @@ const redirectClient =
     : 'http://localhost:5173'
 
 const oauth2Client = new google.auth.OAuth2(clientId, secrectId, redirectServer)
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 router.get('/authenticate', (req, res) => {
   const url = oauth2Client.generateAuthUrl({
@@ -51,7 +54,8 @@ router.get('/get-token', (req, res) => {
 router.get('/calendar', async (req, res) => {
   const token = req.headers['vlu-token']
   const calendarName = req.headers['vlu-calendarname']
-  const isLichThi = Boolean(req.headers['vlu-calendarname'])
+  console.log(req.headers['vlu-calendarname'])
+  const isLichThi = req.headers['vlu-islichthi'] == 'true' ? true : false
   const calendarJson = await JSON.parse(readFile('converted.json'))
   try {
     oauth2Client.setCredentials({ access_token: token })
@@ -68,7 +72,6 @@ router.get('/calendar', async (req, res) => {
     })
 
     const newCalendarId = await createNewCalendar.data.id
-
     const newCalendar = await removeThings(calendarJson, isLichThi)
 
     console.log(newCalendar)
@@ -76,6 +79,7 @@ router.get('/calendar', async (req, res) => {
     for (let i = 0; i < newCalendar.length; i++) {
       // Gửi yêu cầu thêm sự kiện mới
       if (!isLichThi) {
+        console.log(newCalendar[i])
         const name = `${newCalendar[i]['Tên học phần']} - ${newCalendar[i]['Phòng']}`
         const desc = `Giảng viên: ${newCalendar[i]['CBGD']} - Số tín chỉ: ${newCalendar[i]['STC']}`
         const location = `${newCalendar[i]['Phòng']}`
@@ -84,13 +88,6 @@ router.get('/calendar', async (req, res) => {
         const weekList = newCalendar[i]['Tuần'].split(',')
         for (let k = 0; k < weekList.length; k++) {
           const date = calcDate(dayOfWeek, weekList[k])
-
-          console.log('name: ' + name)
-          console.log('desc: ' + desc)
-          console.log('location: ' + location)
-          console.log('time: ' + time)
-          console.log('dayofweek: ' + dayOfWeek)
-          console.log('date: ' + date)
 
           var textEvent = {
             summary: name,
@@ -161,18 +158,15 @@ router.get('/calendar', async (req, res) => {
             resource: textEvent
           })
         }
-
+        console.log('generate lich thi')
         await sleep(500).then(handleLichthi())
       }
     }
     res.send('Done!')
   } catch (error) {
+    console.log(error)
     res.send(error)
   }
 })
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
 
 module.exports = router

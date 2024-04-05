@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Typography
-} from '@mui/material'
+import { Button, CircularProgress, Container } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LANG } from '~/lib/language'
@@ -21,7 +15,7 @@ const ImportCalendar = ({
   const navigate = useNavigate()
   const calendarName = isLichThi ? 'VLU Exams' : 'VLU Learning'
   const handleImportCalendar = async () => {
-    setOnLoad(true)
+    // setOnLoad(true)
     const getCalendarList = await fetch(`${LANG.link}/google/calendar`, {
       headers: {
         'vlu-calendarname': calendarName,
@@ -45,10 +39,6 @@ const ImportCalendar = ({
       }}
     >
       <form style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Typography>Tên lịch:</Typography>
-          <input type='text' placeholder='Mặc định là Lịch VLU' />
-        </Box>
         {!onLoad ? (
           error != undefined ? (
             <p>{error}</p>
