@@ -7,7 +7,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.use('/api/v1/', require('./routes/api.v1'))
+app.use('/api/v2/', require('./routes/api.v2'))
 
 app.use('/google/', require('./routes/google'))
 
