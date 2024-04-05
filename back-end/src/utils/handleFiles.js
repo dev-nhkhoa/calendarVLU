@@ -1,183 +1,68 @@
-const tabletojson = require('tabletojson').tabletojson
-const fs = require('fs')
-const { plus } = require('googleapis/build/src/apis/plus')
-const path = require('path')
 require('dotenv').config()
 
-const fileHTML = process.env.FILE_HTML || 'file.html'
-const fileJSON = process.env.FILE_JSON || 'converted.json'
+const fs = require('fs')
+const path = require('path')
+const tabletojson = require('tabletojson').tabletojson
 
-const unlinkFiles = () => {
-  fs.unlink(fileHTML, (err) => {})
-  fs.unlink(fileJSON, (err) => {})
-}
-
-// Hàm convert HTML table -> json
-// return lại table để hiển thị cho user bên FE hoặc string thông báo đăng nhập thất bại
-const convertTable2JSON = (HTMLTable) => {
-  const locateFile = fs.readFileSync(
-    path.resolve(process.cwd(), `./${fileHTML}`),
+const readFile = (fileName) => {
+  return fs.readFileSync(
+    path.resolve(process.cwd(), `./filesStorage/${fileName}`),
     {
       encoding: 'utf-8'
     }
   )
-
-  const converted = tabletojson.convert(locateFile)
-
-  // Save file converted.json
-  fs.writeFileSync(fileJSON, JSON.stringify(converted, null, 2), (err) => {
-    if (err) console.error(err)
-  })
-
-  if (
-    fs.readFileSync(path.resolve(process.cwd(), `./${fileJSON}`), {
-      encoding: 'utf-8'
-    }).length == 2
-  ) {
-    return 'Đăng nhập thất bại!'
-  }
-  return HTMLTable
 }
 
-const saveFile = (fileName, data) => {
-  fs.writeFileSync(fileName, data, (err) => {
-    if (err) {
+const writeFile = (fileName, data, isNormal) => {
+  const newData = isNormal ? JSON.stringify(data, null, 2) : data
+
+  fs.writeFileSync(
+    path.resolve(process.cwd(), `./filesStorage/${fileName}`),
+    newData,
+    (err) => {
       console.error(err)
       return false
     }
-  })
+  )
   return true
 }
 
-const readFile = (fileName) => {
-  return fs.readFileSync(path.resolve(process.cwd(), `./${fileName}`), {
-    encoding: 'utf-8'
-  })
-}
-
-const removeThings = (data, isLichThi) => {
-  const newData = data.flat()
-  // xóa tiêu đề
-  if (!isLichThi) {
-    newData.shift()
-  }
-  return newData
-}
-
-const convertDate = (date) => {
-  switch (date) {
-    case 'Hai':
-      return 0
-    case 'Ba':
-      return 1
-    case 'Tư':
-      return 2
-    case 'Năm':
-      return 3
-    case 'Sáu':
-      return 4
-    case 'Bảy':
-      return 5
-    case 'Chủ Nhật':
-      return 6
-  }
-}
-
-function calcDate(dayOfWeek, weekNumber, isLichThi) {
-  const startWeek = 30
-  const startDate = new Date('2024-03-25') // Ngày bắt đầu
-
-  // Tính số ngày cần thêm vào dựa trên sự chênh lệch giữa số tuần được truyền vào và tuần bắt đầu
-  const daysToAdd = (weekNumber - startWeek) * 7
-
-  // Sao chép ngày bắt đầu và thêm số ngày vào
-  const targetDate = new Date(startDate)
-  targetDate.setDate(startDate.getDate() + daysToAdd + dayOfWeek)
-
-  const day = targetDate.getDate().toString().padStart(2, '0') // Ngày
-  const month = (targetDate.getMonth() + 1).toString().padStart(2, '0') // Tháng (lưu ý: tháng trong JavaScript bắt đầu từ 0)
-  const year = targetDate.getFullYear().toString() // Năm
-
-  return `${year}-${month}-${day}` // Trả về chuỗi ngày/tháng/năm
-}
-
-const convertTime = (time, isLichThi) => {
-  if (isLichThi) return String(time).replace('g', ':') + ':00'
-  const convert2Time = (num) => {
-    switch (num) {
-      case 1:
-        return '7:00:00'
-      case 2:
-        return '8:15:00'
-      case 3:
-        return '9:30:00'
-      case 4:
-        return '9:30:00'
-      case 5:
-        return '10:45:00'
-      case 6:
-        return '12:00:00'
-      case 7:
-        return '13:00:00'
-      case 8:
-        return '14:15:00'
-      case 9:
-        return '15:30:00'
-      case 10:
-        return '15:30:00'
-      case 11:
-        return '16:45:00'
-      case 12:
-        return '18:00:00'
-      case 13:
-        return '18:00:00'
-      case 14:
-        return '19:15:00'
-      case 15:
-        return '20:30:00'
+const saveFile = (fileName, data) => {
+  fs.writeFileSync(
+    path.resolve(process.cwd(), `./filesStorage/${fileName}`),
+    data,
+    (err) => {
+      if (err) {
+        console.error(err)
+        return false
+      }
     }
-  }
-  return time.split('-').map((item) => convert2Time(parseInt(item)))
+  )
+  return true
 }
 
-const convertExamDate = (date) => {
-  const newDate = String(date).split('/')
-  return `${newDate[2]}-${newDate[1]}-${newDate[0]}`
+const checkIsValidCalendar = (fileName) => {
+  const locateFile = readFile(fileName)
+  const convert2Json = tabletojson.convert(locateFile)
+  const saveFileName = String(fileName).replace('.html', '.json')
+
+  if (!writeFile(saveFileName, convert2Json)) return false
+
+  return readFile(saveFileName).length == 2 ? false : true
 }
 
-function addTime(time, add) {
-  // Chuyển đổi chuỗi thời gian thành giờ và phút
-  const [hour, minute] = time.split('g').map(Number)
-
-  let totalHour = hour
-  let totalMinute = minute + add
-
-  // Xử lý trường hợp khi phút vượt quá 60
-  if (totalMinute >= 60) {
-    totalHour += Math.floor(totalMinute / 60)
-    totalMinute %= 60
+const handleWriteFileToCsv = async (fileName, data, res) => {
+  if (!writeFile(fileName, data, false)) {
+    res.status(500).json('Lưu file thất bại!')
+    return
   }
-
-  // Xử lý trường hợp khi giờ vượt quá 24
-  if (totalHour >= 24) {
-    totalHour %= 24
-  }
-
-  // Định dạng chuỗi kết quả
-  const result = `${totalHour}g${totalMinute}`
-
-  return result
+  res.download(path.resolve(process.cwd(), `./filesStorage/${fileName}`))
 }
 
 module.exports = {
-  convertTable2JSON,
-  unlinkFiles,
+  handleWriteFileToCsv,
+  checkIsValidCalendar,
   saveFile,
   readFile,
-  removeThings,
-  convertTime,
-  calcDate,
-  convertDate,
-  convertExamDate,
-  addTime
+  writeFile
 }
