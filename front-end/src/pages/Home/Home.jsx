@@ -8,6 +8,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import GoogleLogin from '../Google/GoogleLogin/GoogleLogin'
 import ImportCalendar from '../Google/ImportCalendar/ImportCalendar'
 import { useState } from 'react'
+import LandingPage from '../LandingPage/LandingPage'
 
 const Home = () => {
   const [calendar, setCalendar] = useState()
@@ -29,7 +30,7 @@ const Home = () => {
     {
       id: 'root',
       path: '/',
-      element: <GoogleLogin />
+      element: <LandingPage />
     },
     {
       path: '/import-calendar',
@@ -44,36 +45,7 @@ const Home = () => {
       )
     }
   ])
-  return (
-    <Container
-      maxWidth={'100%'}
-      sx={{
-        height: '100vh',
-        backgroundColor: colors.bg,
-        pt: '12px',
-        pb: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        overflowY: 'auto'
-      }}
-    >
-      <Container
-        maxWidth={'sm'}
-        disableGutters
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'left',
-          backgroundColor: colors.main,
-          borderRadius: '12px',
-          p: '12px 12px'
-        }}
-      >
-        <Header />
-        <RouterProvider router={router} />
-      </Container>
-    </Container>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default Home

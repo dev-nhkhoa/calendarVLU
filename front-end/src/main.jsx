@@ -3,6 +3,8 @@ import Home from './pages/Home/Home'
 import { experimental_extendTheme as extendTheme } from '@mui/material'
 import { Experimental_CssVarsProvider as MuiProvider } from '@mui/material'
 import { CssBaseline } from '@mui/material'
+import '../global.css'
+import '@fontsource/montserrat'
 
 export const colors = { main: '#fff', bg: '#000' }
 
