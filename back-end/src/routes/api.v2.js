@@ -76,10 +76,10 @@ const handleLoginToVlu = async (req, res) => {
       return
     }
 
-    // if (!checkIsValidCalendar(saveFileName)) {
-    //   res.status(507).json(`Đăng nhập thất bại!`)
-    //   return
-    // }
+    if (!checkIsValidCalendar(saveFileName)) {
+      res.status(507).json(`Đăng nhập thất bại!`)
+      return
+    }
     res.status(200).json('OK!')
   } catch (error) {
     console.log(error)
