@@ -36,6 +36,14 @@ const handleLoginToVlu = async (req, res) => {
     const { userId, cookie, username, password, lichType, yearStudy, termID } =
       req.query
 
+    console.log(userId)
+    console.log(cookie)
+    console.log(username)
+    console.log(password)
+    console.log(lichType)
+    console.log(yearStudy)
+    console.log(termID)
+
     const saveFileName = userId + '.html'
     const applyCookieHeader = new Headers()
     applyCookieHeader.append('Cookie', cookie)
@@ -68,12 +76,13 @@ const handleLoginToVlu = async (req, res) => {
       return
     }
 
-    if (!checkIsValidCalendar(saveFileName)) {
-      res.status(507).json(`Đăng nhập thất bại!`)
-      return
-    }
+    // if (!checkIsValidCalendar(saveFileName)) {
+    //   res.status(507).json(`Đăng nhập thất bại!`)
+    //   return
+    // }
     res.status(200).json('OK!')
   } catch (error) {
+    console.log(error)
     res.status(500).json(error)
   }
 }

@@ -5,37 +5,29 @@ const path = require('path')
 const tabletojson = require('tabletojson').tabletojson
 
 const readFile = (fileName) => {
-  return (
-    fs.readFileSync(`./filesStorage/${fileName}`),
-    {
-      encoding: 'utf-8'
-    }
-  )
+  return fs.readFileSync(`./filesStorage/${fileName}`, {
+    encoding: 'utf-8'
+  })
 }
 
 const writeFile = (fileName, data, isNormal) => {
   const newData = isNormal ? JSON.stringify(data, null, 2) : data
 
-  fs.writeFileSync(`./filesStorage/${fileName}`),
-    newData,
-    (err) => {
-      console.error(err)
-      return false
-    }
-
+  fs.writeFileSync(`./filesStorage/${fileName}`, newData, (err) => {
+    console.error(err)
+    return false
+  })
   return true
 }
 
 const saveFile = (fileName, data) => {
-  fs.writeFileSync(`./filesStorage/${fileName}`),
-    data,
-    (err) => {
-      if (err) {
-        console.error(err)
-        return false
-      }
+  console.log(String(data) + 'hi')
+  fs.writeFileSync(`./filesStorage/${fileName}`, data, (err) => {
+    if (err) {
+      console.error(err)
+      return false
     }
-
+  })
   return true
 }
 
@@ -54,7 +46,32 @@ const handleWriteFileToCsv = async (fileName, data, res) => {
     res.status(500).json('Lưu file thất bại!')
     return
   }
-  res.download(`./filesStorage/${fileName}`)
+  res.download(path.resolve(process.cwd(), `./filesStorage/${fileName}`))
+}
+
+const recreateFolderPeriodically = (folderPath, interval) => {
+  // Xóa thư mục ban đầu (nếu tồn tại)
+  if (fs.existsSync(folderPath)) {
+    fs.rmdirSync(folderPath, { recursive: true })
+    console.log(`Deleted folder: ${folderPath}`)
+  }
+
+  // Tạo thư mục ban đầu
+  fs.mkdirSync(folderPath)
+  console.log(`Created folder: ${folderPath}`)
+
+  // Thiết lập chu kỳ xóa và tạo lại thư mục
+  setInterval(() => {
+    // Xóa thư mục (nếu tồn tại)
+    if (fs.existsSync(folderPath)) {
+      fs.rmdirSync(folderPath, { recursive: true })
+      console.log(`Deleted folder: ${folderPath}`)
+    }
+
+    // Tạo thư mục mới
+    fs.mkdirSync(folderPath)
+    console.log(`Created folder: ${folderPath}`)
+  }, interval)
 }
 
 module.exports = {
@@ -62,5 +79,6 @@ module.exports = {
   checkIsValidCalendar,
   saveFile,
   readFile,
-  writeFile
+  writeFile,
+  recreateFolderPeriodically
 }

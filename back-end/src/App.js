@@ -2,6 +2,10 @@ require('dotenv').config()
 
 const express = require('express')
 const cors = require('cors')
+const {
+  createFolderIfNotExists,
+  recreateFolderPeriodically
+} = require('./utils/handleFiles')
 const app = express()
 
 app.use(express.json())
@@ -19,4 +23,5 @@ const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
   console.log(`CalenVLU is running on port ${PORT}`)
+  recreateFolderPeriodically('./filesStorage', 1800000)
 })
