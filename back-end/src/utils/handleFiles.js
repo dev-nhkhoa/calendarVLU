@@ -5,8 +5,8 @@ const path = require('path')
 const tabletojson = require('tabletojson').tabletojson
 
 const readFile = (fileName) => {
-  return fs.readFileSync(
-    path.resolve(process.cwd(), `./filesStorage/${fileName}`),
+  return (
+    fs.readFileSync(`./filesStorage/${fileName}`),
     {
       encoding: 'utf-8'
     }
@@ -16,20 +16,18 @@ const readFile = (fileName) => {
 const writeFile = (fileName, data, isNormal) => {
   const newData = isNormal ? JSON.stringify(data, null, 2) : data
 
-  fs.writeFileSync(
-    path.resolve(process.cwd(), `./filesStorage/${fileName}`),
+  fs.writeFileSync(`./filesStorage/${fileName}`),
     newData,
     (err) => {
       console.error(err)
       return false
     }
-  )
+
   return true
 }
 
 const saveFile = (fileName, data) => {
-  fs.writeFileSync(
-    path.resolve(process.cwd(), `./filesStorage/${fileName}`),
+  fs.writeFileSync(`./filesStorage/${fileName}`),
     data,
     (err) => {
       if (err) {
@@ -37,7 +35,7 @@ const saveFile = (fileName, data) => {
         return false
       }
     }
-  )
+
   return true
 }
 
@@ -56,7 +54,7 @@ const handleWriteFileToCsv = async (fileName, data, res) => {
     res.status(500).json('Lưu file thất bại!')
     return
   }
-  res.download(path.resolve(process.cwd(), `./filesStorage/${fileName}`))
+  res.download(`./filesStorage/${fileName}`)
 }
 
 module.exports = {
