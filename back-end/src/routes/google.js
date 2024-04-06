@@ -3,16 +3,16 @@ require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const { google } = require('googleapis')
+const { readFile } = require('../utils/handleFiles')
+const { sleep } = require('../utils/usefulThings')
 const {
-  readFile,
   removeThings,
   convertDate,
   convertTime,
   calcDate,
   convertExamDate,
   addTime
-} = require('../utils/handleFiles')
-const { sleep } = require('../utils/usefulThings')
+} = require('../utils/handleCalendar')
 
 // google cloud credentials
 const clientId = process.env.CLIENT_ID
@@ -45,21 +45,18 @@ const handleGoogleGetAccessToken = (req, res) => {
   oauth2Client.getToken(code, (err, token) => {
     if (err) {
       console.log(err)
-      res.redirect(`${redirectClient}/calendar`)
       return
     }
     oauth2Client.setCredentials(token)
     //TODO: CHANGE
-    res.redirect(
-      `${redirectClient}/on-import-data-to-ggcalendar?token=${token.access_token}`
-    )
+    res.redirect(`${redirectClient}/vlu/calendar?token=${token.access_token}`)
   })
 }
 
 const handleImportDataToGoogleCalendar = async (req, res) => {
   const { userId, token, calendarName, lichType } = req.query
 
-  const isLichThi = (lichType = 'true' ? true : false)
+  const isLichThi = lichType == 'ShowExam' ? true : false
   const calendarJson = await JSON.parse(readFile(userId + '.json'))
 
   // authenticate via access token
@@ -68,11 +65,6 @@ const handleImportDataToGoogleCalendar = async (req, res) => {
     version: 'v3',
     auth: oauth2Client
   })
-
-  // Gửi yêu cầu tạo lịch mới
-  const createNewCalendar = await createNewGoogleCalendar(calendarName)
-  const newCalendarId = createNewCalendar.data.id
-  const calendarData = removeThings(calendarJson, isLichThi)
 
   const createNewGoogleCalendar = async (name) => {
     return await googleCalendar.calendars.insert({
@@ -83,6 +75,10 @@ const handleImportDataToGoogleCalendar = async (req, res) => {
       }
     })
   }
+  // Gửi yêu cầu tạo lịch mới
+  const createNewCalendar = await createNewGoogleCalendar(calendarName)
+  const newCalendarId = createNewCalendar.data.id
+  const calendarData = removeThings(calendarJson, isLichThi)
 
   const getTextEvent = (name, desc, location, date, time) => {
     return {
@@ -117,10 +113,12 @@ const handleImportDataToGoogleCalendar = async (req, res) => {
     for (let k = 0; k < weekList.length; k++) {
       const date = calcDate(dayOfWeek, weekList[k])
 
-      calendar.events.insert({
+      googleCalendar.events.insert({
         calendarId: newCalendarId,
         resource: getTextEvent(name, desc, location, date, time)
       })
+
+      console.log(getTextEvent(name, desc, location, date, time))
     }
   }
 
@@ -136,10 +134,12 @@ const handleImportDataToGoogleCalendar = async (req, res) => {
     )
     const time = [startTime, endTime]
 
-    calendar.events.insert({
+    googleCalendar.events.insert({
       calendarId: newCalendarId,
       resource: getTextEvent(name, desc, location, date, time)
     })
+
+    console.log(getTextEvent(name, desc, location, date, time))
   }
 
   try {
@@ -148,9 +148,9 @@ const handleImportDataToGoogleCalendar = async (req, res) => {
 
       if (!isLichThi) {
         await sleep(1000).then(handleImportLichHoc2GoogleCalendar(subject))
-        return
+      } else {
+        await sleep(1000).then(handleImportLichThi2GoogleCalendar(subject))
       }
-      await sleep(1000).then(handleImportLichThi2GoogleCalendar(subject))
     }
     res.status(200).json('ok!')
   } catch (error) {

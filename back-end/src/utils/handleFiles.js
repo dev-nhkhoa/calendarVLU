@@ -46,7 +46,7 @@ const checkIsValidCalendar = (fileName) => {
   const convert2Json = tabletojson.convert(locateFile)
   const saveFileName = String(fileName).replace('.html', '.json')
 
-  if (!writeFile(saveFileName, convert2Json)) return false
+  if (!writeFile(saveFileName, convert2Json, true)) return false
 
   return readFile(saveFileName).length == 2 ? false : true
 }

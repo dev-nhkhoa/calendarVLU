@@ -199,5 +199,6 @@ module.exports = {
   convertDate,
   convertTime,
   removeThings,
-  calcDate
+  calcDate,
+  convertExamDate
 }

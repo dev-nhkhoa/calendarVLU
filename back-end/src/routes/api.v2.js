@@ -94,7 +94,7 @@ const handleExportCalendar2Csv = (req, res) => {
   const fileName = userId + '.json'
   const lichThiFileName = userId + '-lichThi.csv'
   const lichHocFileName = userId + '-lichHoc.csv'
-  if (lichType == 'showExam') {
+  if (lichType == 'ShowExam') {
     const lichThiData = convertJson4LichThiCsv(fileName)
     handleWriteFileToCsv(lichThiFileName, lichThiData, res)
     return
