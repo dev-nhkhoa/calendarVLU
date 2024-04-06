@@ -2,7 +2,7 @@
   "name": "vlu-calender-2-gg-calender",
   "private": true,
   "version": "1.7",
-  "proxy": "https://calendarvlu.onrender.com",
+  "proxy": "http://localhost:3000",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,8 @@
     "@fontsource/montserrat": "^5.0.17",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.2",
+    "axios": "^1.6.8",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1"
