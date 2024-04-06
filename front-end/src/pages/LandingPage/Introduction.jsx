@@ -1,6 +1,8 @@
-import { Box, Typography } from '@mui/material'
+import { introduce } from '~/user-config.json'
+
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import LandingPageHeader from '~/components/LandingPageHeader'
-import { LANG } from '~/lib/language'
 
 const Introduction = () => {
   return (
@@ -19,7 +21,7 @@ const Introduction = () => {
           cursor: 'pointer',
           textAlign: 'justify'
         }}>
-        {LANG.introduce}
+        {introduce}
       </Typography>
     </Box>
   )

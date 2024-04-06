@@ -1,6 +1,9 @@
-import { Box, Typography } from '@mui/material'
+import { tinhNang } from '~/user-config.json'
+
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+
 import LandingPageHeader from '~/components/LandingPageHeader'
-import { LANG } from '~/lib/language'
 
 const Features = () => {
   return (
@@ -11,7 +14,7 @@ const Features = () => {
       }}>
       <LandingPageHeader name='Tính năng:' />
       <Box sx={{ pl: '32px' }}>
-        {LANG.tinhNang.map((tinhNang) => (
+        {tinhNang.map((tinhNang) => (
           <ul
             key={tinhNang.name}
             style={{

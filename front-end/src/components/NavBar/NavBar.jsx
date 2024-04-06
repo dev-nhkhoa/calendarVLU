@@ -2,14 +2,16 @@ import { Box, Button, Container, Typography } from '@mui/material'
 import { version } from '../../../package.json'
 import styled from '@emotion/styled'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
+import { useNavigate } from 'react-router-dom'
 
-const NavBarButton = styled(Button)(({ theme }) => ({
+const NavBarButton = styled(Button)(() => ({
   height: '25px',
   borderRadius: '16px',
   color: '#252525'
 }))
 
 const NavBar = () => {
+  const navigate = useNavigate()
   return (
     <Container
       sx={{
@@ -29,9 +31,15 @@ const NavBar = () => {
         <Typography variant='small'>{version}</Typography>
       </Box>
       <Box sx={{ display: { md: 'flex', xs: 'none' }, gap: 2 }}>
-        <NavBarButton variant='text'>Home</NavBarButton>
-        <NavBarButton variant='text'>Lịch Vlu Của Bạn</NavBarButton>
-        <NavBarButton variant='text'>Liên Hệ Dev</NavBarButton>
+        <NavBarButton variant='text' onClick={() => navigate('/')}>
+          Home
+        </NavBarButton>
+        <NavBarButton variant='text' onClick={() => navigate('/vlu/calendar')}>
+          Lịch Vlu Của Bạn
+        </NavBarButton>
+        <NavBarButton variant='text' onClick={() => navigate('/contact')}>
+          Liên Hệ Dev
+        </NavBarButton>
       </Box>
       <Box sx={{ display: { md: 'none', xs: 'flex' } }}>
         <MenuRoundedIcon />

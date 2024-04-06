@@ -1,5 +1,6 @@
-import { Box, Container } from '@mui/material'
-import React from 'react'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+
 import NavBar from '~/components/NavBar/NavBar'
 import Introduction from './Introduction'
 import HowToUse from './HowToUse'
@@ -11,7 +12,7 @@ const LandingPage = () => {
     <Container sx={{ paddingY: '8px', height: '100vh' }}>
       <Container
         sx={{
-          width: { md: '700px', sm: '100%' },
+          width: { md: '600px', sm: '100%' },
           height: '100%',
           background: '#252525',
           borderRadius: '16px',

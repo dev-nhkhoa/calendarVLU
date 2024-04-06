@@ -1,5 +1,5 @@
 import { Box, Container, Typography } from '@mui/material'
-import { LANG } from '~/lib/language'
+import { link } from '~/user-config.json'
 
 const Footer = () => {
   return (
@@ -22,14 +22,14 @@ const Footer = () => {
           </Typography>
           <Typography variant='small'>
             Source code:{' '}
-            <a href={LANG.link.gitHub} target='_blank' rel='noreferrer'>
+            <a href={link.gitHub} target='_blank' rel='noreferrer'>
               calenVLU
             </a>
           </Typography>
 
           <Typography variant='small'>
             Liên hệ dev:{' '}
-            <a href={LANG.link.me} target='_blank' rel='noreferrer'>
+            <a href={link.me} target='_blank' rel='noreferrer'>
               @Nhkhoa
             </a>
           </Typography>

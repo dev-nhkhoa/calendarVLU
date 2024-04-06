@@ -1,189 +1,207 @@
-import { Box, CircularProgress, Typography } from '@mui/material'
+import axios from 'axios'
+
+// pages
+import Warning from '~/components/Warning'
+
 import { useState } from 'react'
-import { setupLichHoc, setupLichThi } from '~/lib/handleJSON'
-import { LANG } from '~/lib/language'
-import { createHKARRAY, createYearARRAY } from '~/lib/utils'
 import { useNavigate } from 'react-router-dom'
 
-const CalendarHTML = ({ data }) => {
-  return (
-    <div
-      dangerouslySetInnerHTML={{ __html: data }}
-      style={{
-        maxWidth: '300px',
-        maxHeight: '300px',
-        overflow: 'auto'
-      }}
-    />
-  )
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress'
+
+import { createDropdownTermID, createDropdownYear } from '~/lib/handleThings'
+
+const API_URL = 'http://localhost:3000/api/v2'
+
+const CSS_LOGIN_INPUT = {
+  borderRadius: '6px',
+  height: '30px',
+  border: '2px solid black',
+  width: '100%'
 }
+const CSS_LOGIN_TEXT = { color: '#eeeeee', fontWeight: '300' }
 
 export default function Login({
-  isLichThi,
-  setLichThi,
-  setCalendarJson,
-  setToken
+  userId,
+  setIsLogin2Vlu,
+  lichType,
+  setLichType
 }) {
-  const params = new URLSearchParams(window.location.search)
-  const token = params.get('token')
-  setToken(token)
-  const [onLoad, setOnLoad] = useState(false)
-  const [calendar, setCalendar] = useState()
-  // const [isLichTHI, setIsLichTHI] = useState(false)
+  // state Login
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [yearStudy, setYearStudy] = useState(createDropdownYear()[0])
+  const [termID, setTermID] = useState(createDropdownTermID()[0])
+  const [onLoad, setonLoad] = useState(false)
+  const [error, setError] = useState()
 
   const navigate = useNavigate()
 
-  const handleGoogleLogin = async () => {
-    const calenJson = await getJsonCalendar()
-    setCalendarJson(calenJson)
-    navigate('/import-calendar')
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    setOnLoad(true)
-
-    const username = event.target.elements.username.value
-    const password = event.target.elements.password.value
-    const lichHoc = event.target.elements.selectLichHoc.value
-    const year = event.target.elements.selectYear.value
-    const period = event.target.elements.selectPeriod.value
-
-    if (lichHoc == 'ShowExam') {
-      setLichThi(true)
-    }
-
+  const handleLogin = async () => {
     try {
-      // lấy cookie từ trang web online.vlu.edu.vn dùng để đăng nhập
-      const getCookie = await fetch(`${LANG.link}/api/v1/get-cookie`)
+      setonLoad(true)
+      setError()
 
-      const cookie = await getCookie.text()
+      const getVluLoginCookie = await axios.get(API_URL + '/get-vlu-cookie')
+      const vluLoginResquestStatus = getVluLoginCookie.status
 
-      // thực hiện đăng nhập bằng cách dùng cookie đã lấy
-      const getCalendar = await fetch(`${LANG.link}/api/v1/get-calendar`, {
-        method: 'GET',
-        headers: {
-          'calenvlu-cookie': cookie,
-          'calenvlu-username': username,
-          'calenvlu-password': password,
-          'calenvlu-year': year,
-          'calenvlu-period': period,
-          'calenvlu-lichhoc': lichHoc
+      if (!vluLoginResquestStatus == 200) {
+        setError('Không thể lấy login cookie từ online.vlu.edu.vn!')
+        setonLoad(false)
+        return
+      }
+
+      const cookie = getVluLoginCookie.data
+
+      const login2Vlu = await axios.get(API_URL + '/login-to-vlu', {
+        params: {
+          userId,
+          cookie,
+          username,
+          password,
+          lichType,
+          yearStudy,
+          termID
         }
       })
 
-      const calendar = await getCalendar.text()
-      setOnLoad(false)
-      setCalendar(calendar)
+      // login thất bại!
+      if (login2Vlu.status == 507) {
+        setError('Tài khoản hoặc mật khẩu không đúng!')
+        setonLoad(false)
+      }
+
+      if (!login2Vlu.status == 200) {
+        setError(login2Vlu.data)
+        setonLoad(false)
+        return
+      }
+
+      // login thành công -> redirect sang trang xem lịch
+      setIsLogin2Vlu(true)
+      navigate('/vlu/calendar')
+
+      setonLoad(false)
     } catch (error) {
-      setOnLoad(false)
-      setCalendar('Đăng nhập thất bại!')
+      setError('Lỗi đăng nhập!' + error.message)
+      setonLoad(false)
     }
-  }
-
-  const getJsonCalendar = async () => {
-    const responce = await fetch(`${LANG.link}/api/v1/get-calendar-json`)
-    const calendar = await responce.text()
-    const calendarJSON = await JSON.parse(calendar)
-    return calendarJSON
-  }
-
-  const handleExportCSV = async () => {
-    if (isLichThi) {
-      //  xử lý tải lịch thi
-      setupLichThi(await getJsonCalendar())
-      return
-    }
-    // xử lý tải lịch học
-    setupLichHoc(await getJsonCalendar())
   }
 
   return (
-    <Box>
-      {/* Tiêu đề */}
-      <Typography variant='large' sx={{ textAlign: 'center' }}>
-        ĐĂNG NHẬP
-      </Typography>
+    <Container sx={{ width: '100%', height: '100vh', py: '16px' }}>
+      <Container
+        sx={{
+          backgroundColor: '#252525',
+          borderRadius: '32px',
+          height: '100%',
+          width: { md: '600px', xs: '100%' },
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          p: '16px'
+        }}>
+        <Typography
+          sx={{
+            color: '#eeeeee',
+            fontSize: { md: '24px', xs: '18px' },
+            fontWeight: '500'
+          }}>
+          Đăng nhập tài khoản VLU của bạn
+        </Typography>
+        <Box
+          sx={{ display: 'flex', flexDirection: 'column', maxWidth: '200px' }}>
+          <Box>
+            <Typography sx={CSS_LOGIN_TEXT}>Số tài khoản:</Typography>
+            <input
+              defaultValue={username}
+              type='text'
+              placeholder='mã số sinh viên'
+              style={CSS_LOGIN_INPUT}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Box>
 
-      <Typography variant='small' sx={{ textAlign: 'center' }}>
-        Đăng nhập vào tài khoảng trang online.vlu.edu.vn
-      </Typography>
-
-      <Box
-        maxWidth={'md'}
-        sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}
-      >
-        <form
-          style={{ display: 'flex', flexDirection: 'column' }}
-          onSubmit={handleSubmit}
-        >
-          {/* username */}
-          <Typography variant='small'>Mã đăng nhập:</Typography>
-          <input type='text' name='username' />
-
-          {/* password */}
-          <Typography variant='small'>Mật khẩu:</Typography>
-          <input type='password' name='password' />
-
-          <Typography variant='small'>Lịch:</Typography>
-          <select name='selectLichHoc' style={{ height: '20px' }}>
+          <Box>
+            <Typography sx={CSS_LOGIN_TEXT}>Mật khẩu:</Typography>
+            <input
+              defaultValue={password}
+              type='password'
+              placeholder='(vd: 12022003)'
+              style={CSS_LOGIN_INPUT}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Box>
+          <Typography sx={CSS_LOGIN_TEXT}>Chọn loại lịch:</Typography>
+          <select
+            defaultValue={lichType}
+            name='selectLichHoc'
+            style={CSS_LOGIN_INPUT}
+            onChange={(e) => setLichType(e.target.value)}>
             <option value={'DrawingStudentSchedule_Perior'}>Lịch học</option>
             <option value={'ShowExam'}>Lịch thi</option>
           </select>
 
-          <Typography variant='small'>Chọn năm học:</Typography>
-          <select name='selectYear' style={{ height: '20px' }}>
-            {createYearARRAY().map((year) => (
+          <Typography sx={CSS_LOGIN_TEXT}>Chọn hăm học:</Typography>
+          <select
+            defaultValue={yearStudy}
+            name='selectYear'
+            style={CSS_LOGIN_INPUT}
+            onChange={(e) => setYearStudy(e.target.value)}>
+            {createDropdownYear().map((year) => (
               <option key={year} value={year}>
                 {year}
               </option>
             ))}
           </select>
 
-          <Typography variant='small'>Chọn học kì:</Typography>
-          <select name='selectPeriod' style={{ height: '20px' }}>
-            {createHKARRAY().map((hk) => (
+          <Typography sx={CSS_LOGIN_TEXT}>Chọn học kì:</Typography>
+          <select
+            defaultValue={termID}
+            name='selectPeriod'
+            style={CSS_LOGIN_INPUT}
+            onChange={(e) => setTermID(e.target.value)}>
+            {createDropdownTermID().map((hk) => (
               <option key={hk} value={hk}>
                 {hk}
               </option>
             ))}
           </select>
-
-          {onLoad ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: '12px' }}>
+          {error ? (
+            <Typography variant='small' sx={{ color: 'red' }}>
+              {error}
+            </Typography>
+          ) : null}
+          {!onLoad ? (
+            <>
+              <Button
+                variant='contained'
+                sx={{
+                  mt: '16px',
+                  color: '#252525',
+                  backgroundColor: '#eeeeee',
+                  ':hover': {
+                    backgroundColor: '#333333',
+                    color: '#f5f5f5'
+                  }
+                }}
+                onClick={handleLogin}>
+                Đăng nhập
+              </Button>
+            </>
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: '5px' }}>
               <CircularProgress />
             </Box>
-          ) : (
-            <button type='submit' style={{ marginTop: '10px' }}>
-              Lấy thời khóa biểu
-            </button>
           )}
-        </form>
-      </Box>
-      {calendar == undefined ? null : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            maxHeight: '200px',
-            justifyContent: 'center',
-            alignItems: 'center',
-            mt: '12px'
-          }}
-        >
-          <CalendarHTML data={calendar} />
-          {calendar !== 'Đăng nhập thất bại!' ? (
-            <>
-              <button onClick={handleGoogleLogin}>
-                Kết nối TKB với Google Calendar
-              </button>
-              <button onClick={handleExportCSV}>
-                Xuất file thời khóa biểu
-              </button>
-            </>
-          ) : null}
         </Box>
-      )}
-    </Box>
+        <Warning />
+      </Container>
+    </Container>
   )
 }
