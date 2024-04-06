@@ -1,8 +1,8 @@
 {
   "link": {
     "server": {
-      "api": "http://localhost:3000/api/v2",
-      "google": "http://localhost:3000/google"
+      "api": "https://calendarvlu.onrender.com/api/v2",
+      "google": "https://calendarvlu.onrender.com/google"
     },
     "me": "https://www.facebook.com/nhkhoa.a",
     "gitHub": "https://github.com/dev-nhkhoa/calendarVLU"
