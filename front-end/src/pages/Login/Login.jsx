@@ -5,6 +5,7 @@ import Warning from '~/components/Warning'
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { link } from '~/user-config.json'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -13,8 +14,6 @@ import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import { createDropdownTermID, createDropdownYear } from '~/lib/handleThings'
-
-const API_URL = 'http://localhost:3000/api/v2'
 
 const CSS_LOGIN_INPUT = {
   borderRadius: '6px',
@@ -45,7 +44,9 @@ export default function Login({
       setonLoad(true)
       setError()
 
-      const getVluLoginCookie = await axios.get(API_URL + '/get-vlu-cookie')
+      const getVluLoginCookie = await axios.get(
+        link.server.api + '/get-vlu-cookie'
+      )
       const vluLoginResquestStatus = getVluLoginCookie.status
 
       if (!vluLoginResquestStatus == 200) {
@@ -56,7 +57,7 @@ export default function Login({
 
       const cookie = getVluLoginCookie.data
 
-      const login2Vlu = await axios.get(API_URL + '/login-to-vlu', {
+      const login2Vlu = await axios.get(link.server.api + '/login-to-vlu', {
         params: {
           userId,
           cookie,

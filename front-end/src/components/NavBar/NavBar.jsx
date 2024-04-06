@@ -34,7 +34,7 @@ const NavBar = () => {
         <NavBarButton variant='text' onClick={() => navigate('/')}>
           Home
         </NavBarButton>
-        <NavBarButton variant='text' onClick={() => navigate('/vlu/calendar')}>
+        <NavBarButton variant='text' onClick={() => navigate('/vlu/login')}>
           Lịch Vlu Của Bạn
         </NavBarButton>
         <NavBarButton variant='text' onClick={() => navigate('/contact')}>
