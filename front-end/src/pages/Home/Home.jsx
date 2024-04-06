@@ -1,79 +1,60 @@
-import { Container } from '@mui/material'
-import { colors } from '~/main'
-
 // pages
 import Login from '~/pages/Login/Login'
-import Header from '~/components/Header'
+import Calendar from '../Calendar/Calendar'
+import LandingPage from '../LandingPage/LandingPage'
+
+import React from 'react'
+import Cookies from 'js-cookie'
+
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import GoogleLogin from '../Google/GoogleLogin/GoogleLogin'
-import ImportCalendar from '../Google/ImportCalendar/ImportCalendar'
-import { useState } from 'react'
+import { generateRandomUserID, saveUserIDToCookie } from '~/lib/handleThings'
 
 const Home = () => {
-  const [calendar, setCalendar] = useState()
-  const [isLichThi, setLichThi] = useState(false)
-  const [token, setToken] = useState()
+  const [userId, setUserId] = React.useState(Cookies.get('userID'))
+  const [isLogin2Vlu, setIsLogin2Vlu] = React.useState(false)
+  const [lichType, setLichType] = React.useState(
+    'DrawingStudentSchedule_Perior'
+  )
+
+  React.useEffect(() => {
+    if (Cookies.get('userID') == undefined) {
+      const userID = generateRandomUserID()
+      const expirationDays = 1
+      saveUserIDToCookie(userID, expirationDays)
+    }
+    const getUserId = Cookies.get('userID')
+    setUserId(getUserId)
+  }, [])
 
   const router = createBrowserRouter([
     {
-      path: '/vlu-login',
+      path: '/vlu/login',
       element: (
         <Login
-          isLichThi={isLichThi}
-          setLichThi={setLichThi}
-          setCalendarJson={setCalendar}
-          setToken={setToken}
+          userId={userId}
+          setIsLogin2Vlu={setIsLogin2Vlu}
+          lichType={lichType}
+          setLichType={setLichType}
         />
       )
     },
     {
       id: 'root',
       path: '/',
-      element: <GoogleLogin />
+      element: <LandingPage />
     },
     {
-      path: '/import-calendar',
+      path: '/vlu/calendar',
       element: (
-        <ImportCalendar
-          calendar={calendar}
-          isLichThi={isLichThi}
-          setLichThi={setLichThi}
-          setCalendar={setCalendar}
-          token={token}
+        <Calendar
+          isLogin2Vlu={isLogin2Vlu}
+          userId={userId}
+          lichType={lichType}
         />
       )
     }
   ])
-  return (
-    <Container
-      maxWidth={'100%'}
-      sx={{
-        height: '100vh',
-        backgroundColor: colors.bg,
-        pt: '12px',
-        pb: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        overflowY: 'auto'
-      }}
-    >
-      <Container
-        maxWidth={'sm'}
-        disableGutters
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'left',
-          backgroundColor: colors.main,
-          borderRadius: '12px',
-          p: '12px 12px'
-        }}
-      >
-        <Header />
-        <RouterProvider router={router} />
-      </Container>
-    </Container>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default Home
