@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import Warning from '~/components/Warning'
 import { Button } from '@mui/material'
 import { downloadFile } from '~/lib/handleThings'
+import NavigateIcon from '~/components/NavigateIcon'
 
 const CalendarButton = styled(Button)(() => ({
   height: '25px',
@@ -91,7 +92,7 @@ const Calendar = ({ userId, lichType }) => {
   }
 
   const handleLogin2Google = () => {
-    window.open(`${link.server.google}/authenticate`, '_self')
+    window.open(`${link.server.google}/authenticate`, '_blank')
   }
 
   const handleImportCalendar2Google = async () => {
@@ -133,7 +134,8 @@ const Calendar = ({ userId, lichType }) => {
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
-          p: '16px'
+          p: '16px',
+          position: 'relative'
         }}>
         <Typography
           sx={{
@@ -143,6 +145,9 @@ const Calendar = ({ userId, lichType }) => {
           }}>
           Lịch VLU
         </Typography>
+        <Box sx={{ position: 'absolute', top: 0, left: 0, pt: 2 }}>
+          <NavigateIcon navigateTo='/vlu/login' />
+        </Box>
         <ShowCalendarFromServer data={htmlCalendar} />
 
         <Box
@@ -152,13 +157,25 @@ const Calendar = ({ userId, lichType }) => {
               onClick={() => {
                 navigate('/vlu/login')
               }}>
-              Quay lại
+              <Typography
+                variant='small'
+                sx={{ fontSize: { md: '14px', xs: '10px' } }}>
+                Quay lại
+              </Typography>
             </CalendarButton>
             <CalendarButton onClick={handleExportCalendar}>
-              Export lịch
+              <Typography
+                variant='small'
+                sx={{ fontSize: { md: '14px', xs: '10px' } }}>
+                Export Lịch
+              </Typography>
             </CalendarButton>
             <CalendarButton onClick={handleLogin2Google}>
-              Đăng nhập Google
+              <Typography
+                variant='small'
+                sx={{ fontSize: { md: '14px', xs: '10px' } }}>
+                Đăng nhập Google
+              </Typography>
             </CalendarButton>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -168,7 +185,11 @@ const Calendar = ({ userId, lichType }) => {
               <>
                 {googleToken ? (
                   <CalendarButton onClick={handleImportCalendar2Google}>
-                    Import Lịch Lên Google Calendar
+                    <Typography
+                      variant='small'
+                      sx={{ fontSize: { md: '14px', xs: '10px' } }}>
+                      Import Lịch Lên Google Calendar
+                    </Typography>
                   </CalendarButton>
                 ) : null}
               </>

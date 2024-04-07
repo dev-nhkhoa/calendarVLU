@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import { createDropdownTermID, createDropdownYear } from '~/lib/handleThings'
+import NavigateIcon from '~/components/NavigateIcon'
 
 const CSS_LOGIN_INPUT = {
   borderRadius: '6px',
@@ -30,10 +31,14 @@ export default function Login({
   setLichType
 }) {
   // state Login
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [yearStudy, setYearStudy] = useState(createDropdownYear()[0])
-  const [termID, setTermID] = useState(createDropdownTermID()[0])
+  const [username, setUsername] = useState(localStorage.getItem('username'))
+  const [password, setPassword] = useState(localStorage.getItem('password'))
+  const [yearStudy, setYearStudy] = useState(
+    localStorage.getItem('yearStudy') || createDropdownYear()[0]
+  )
+  const [termID, setTermID] = useState(
+    localStorage.getItem('termID') || createDropdownTermID()[0]
+  )
   const [onLoad, setonLoad] = useState(false)
   const [error, setError] = useState()
 
@@ -82,6 +87,13 @@ export default function Login({
       }
 
       // login thành công -> redirect sang trang xem lịch
+
+      // lưu trữ state states
+      localStorage.setItem('username', username)
+      localStorage.setItem('password', password)
+      localStorage.setItem('lichType', lichType)
+      localStorage.setItem('yearStudy', yearStudy)
+      localStorage.setItem('termID', termID)
       setIsLogin2Vlu(true)
       navigate('/vlu/calendar')
 
@@ -105,7 +117,8 @@ export default function Login({
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
-          p: '16px'
+          p: '16px',
+          position: 'relative'
         }}>
         <Typography
           sx={{
@@ -115,6 +128,9 @@ export default function Login({
           }}>
           Đăng nhập tài khoản VLU của bạn
         </Typography>
+        <Box sx={{ position: 'absolute', top: 0, left: 0, pt: 2 }}>
+          <NavigateIcon navigateTo='/' />
+        </Box>
         <Box
           sx={{ display: 'flex', flexDirection: 'column', maxWidth: '200px' }}>
           <Box>

@@ -1,8 +1,17 @@
-import { Box, Button, Container, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Container,
+  Fade,
+  Menu,
+  MenuItem,
+  Typography
+} from '@mui/material'
 import { version } from '../../../package.json'
 import styled from '@emotion/styled'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 const NavBarButton = styled(Button)(() => ({
   height: '25px',
@@ -11,6 +20,15 @@ const NavBarButton = styled(Button)(() => ({
 }))
 
 const NavBar = () => {
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
   const navigate = useNavigate()
   return (
     <Container
@@ -42,7 +60,46 @@ const NavBar = () => {
         </NavBarButton>
       </Box>
       <Box sx={{ display: { md: 'none', xs: 'flex' } }}>
-        <MenuRoundedIcon />
+        <Button
+          id='fade-button'
+          aria-controls={open ? 'fade-menu' : undefined}
+          aria-haspopup='true'
+          aria-expanded={open ? 'true' : undefined}
+          sx={{ color: '#252525' }}
+          onClick={handleClick}>
+          <MenuRoundedIcon />
+        </Button>
+        <Menu
+          id='fade-menu'
+          MenuListProps={{
+            'aria-labelledby': 'fade-button'
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Fade}>
+          <MenuItem
+            onClick={() => {
+              navigate('/')
+              setAnchorEl(null)
+            }}>
+            Home
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              navigate('/vlu/login')
+              setAnchorEl(null)
+            }}>
+            Lịch Vlu của bạn
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              navigate('/contact')
+              setAnchorEl(null)
+            }}>
+            Liên hệ Dev
+          </MenuItem>
+        </Menu>
       </Box>
     </Container>
   )

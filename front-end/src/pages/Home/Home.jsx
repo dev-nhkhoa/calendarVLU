@@ -13,7 +13,7 @@ const Home = () => {
   const [userId, setUserId] = React.useState(Cookies.get('userID'))
   const [isLogin2Vlu, setIsLogin2Vlu] = React.useState(false)
   const [lichType, setLichType] = React.useState(
-    'DrawingStudentSchedule_Perior'
+    localStorage.getItem('lichType') || 'DrawingStudentSchedule_Perior'
   )
 
   React.useEffect(() => {
