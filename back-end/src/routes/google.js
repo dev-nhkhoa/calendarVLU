@@ -122,7 +122,7 @@ const handleImportDataToGoogleCalendar = async (req, res) => {
     }
   }
 
-  const handleImportLichThi2GoogleCalendar = () => {
+  const handleImportLichThi2GoogleCalendar = (subject) => {
     const name = `${subject['Tên học phần']} - ${subject['Phòng thi']} - ${subject['Mã học phần']}`
     const desc = `Kỳ thi: ${subject['Kỳ thi']} - Phòng thi:${subject['Địa điểm']} ${subject['Phòng thi']}`
     const location = `${subject['Địa điểm']}`

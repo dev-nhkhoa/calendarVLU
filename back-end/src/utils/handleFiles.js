@@ -21,7 +21,6 @@ const writeFile = (fileName, data, isNormal) => {
 }
 
 const saveFile = (fileName, data) => {
-  console.log(String(data) + 'hi')
   fs.writeFileSync(`./filesStorage/${fileName}`, data, (err) => {
     if (err) {
       console.error(err)
