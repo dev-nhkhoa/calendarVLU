@@ -4,7 +4,11 @@
       "api": "https://calendarvlu.onrender.com/api/v2",
       "google": "https://calendarvlu.onrender.com/google"
     },
-    "me": "https://www.facebook.com/nhkhoa.a",
+    "me": {
+      "facebook": "https://www.facebook.com/nhkhoa.a",
+      "zalo": "0796802399",
+      "website": "https://nhkhoa.me"
+    },
     "gitHub": "https://github.com/dev-nhkhoa/calendarVLU"
   },
   "introduce": "calenVLU là một cung cụ giành cho sinh viên, giảng viên đang theo học hoặc làm việc tại trường đại học Văn Lang. Mục đích cho sự ra đời của calenVLU là giúp các bạn sinh viên, giảng viên theo dõi lịch học, lịch làm việc của mình dễ dàng hơn ở trên các nền tảng lịch phổ biến hiện nay như Google calendar hay Outlook.",

@@ -8,6 +8,7 @@ import Cookies from 'js-cookie'
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { generateRandomUserID, saveUserIDToCookie } from '~/lib/handleThings'
+import Contact from '../Contact/Contact'
 
 const Home = () => {
   const [userId, setUserId] = React.useState(Cookies.get('userID'))
@@ -52,6 +53,10 @@ const Home = () => {
           lichType={lichType}
         />
       )
+    },
+    {
+      path: '/contact',
+      element: <Contact />
     }
   ])
   return <RouterProvider router={router} />
