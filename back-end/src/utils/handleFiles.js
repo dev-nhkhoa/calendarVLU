@@ -48,29 +48,13 @@ const handleWriteFileToCsv = async (fileName, data, res) => {
   res.download(path.resolve(process.cwd(), `./filesStorage/${fileName}`))
 }
 
-const recreateFolderPeriodically = (folderPath, interval) => {
-  // Xóa thư mục ban đầu (nếu tồn tại)
-  if (fs.existsSync(folderPath)) {
-    fs.rmdirSync(folderPath, { recursive: true })
-    console.log(`Deleted folder: ${folderPath}`)
-  }
-
-  // Tạo thư mục ban đầu
-  fs.mkdirSync(folderPath)
-  console.log(`Created folder: ${folderPath}`)
-
-  // Thiết lập chu kỳ xóa và tạo lại thư mục
-  setInterval(() => {
-    // Xóa thư mục (nếu tồn tại)
-    if (fs.existsSync(folderPath)) {
-      fs.rmdirSync(folderPath, { recursive: true })
-      console.log(`Deleted folder: ${folderPath}`)
-    }
-
-    // Tạo thư mục mới
+const createFolderIfNotExists = (folderPath) => {
+  if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath)
     console.log(`Created folder: ${folderPath}`)
-  }, interval)
+  } else {
+    console.log(`Folder already exists: ${folderPath}`)
+  }
 }
 
 module.exports = {
@@ -79,5 +63,5 @@ module.exports = {
   saveFile,
   readFile,
   writeFile,
-  recreateFolderPeriodically
+  createFolderIfNotExists
 }
