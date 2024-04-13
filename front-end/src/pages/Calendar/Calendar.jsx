@@ -113,7 +113,9 @@ const Calendar = ({ userId, lichType }) => {
         return
       }
 
-      setImportCalendarReport('Done!')
+      setImportCalendarReport(
+        'Done! Hãy kiểm tra lịch trên Google Calendar nhé.'
+      )
       setOnLoad(false)
     } catch (error) {
       setImportCalendarReport(error.message)
@@ -180,7 +182,19 @@ const Calendar = ({ userId, lichType }) => {
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             {onLoad ? (
-              <CircularProgress />
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  p: '5px'
+                }}>
+                <p style={{ color: '#fff', textAlign: 'center' }}>
+                  Đang import lịch lên google calendar... Xin hãy chờ nhé.
+                </p>
+                <CircularProgress />
+              </Box>
             ) : (
               <>
                 {googleToken ? (

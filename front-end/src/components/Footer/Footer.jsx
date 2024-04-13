@@ -29,7 +29,7 @@ const Footer = () => {
 
           <Typography variant='small'>
             Liên hệ dev:{' '}
-            <a href={link.me} target='_blank' rel='noreferrer'>
+            <a href={link.me.website} target='_blank' rel='noreferrer'>
               @Nhkhoa
             </a>
           </Typography>

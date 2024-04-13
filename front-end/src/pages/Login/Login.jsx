@@ -212,7 +212,17 @@ export default function Login({
               </Button>
             </>
           ) : (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: '5px' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                p: '5px'
+              }}>
+              <p style={{ color: '#fff', textAlign: 'center' }}>
+                Đang gửi yêu cầu đến server...
+              </p>
               <CircularProgress />
             </Box>
           )}
