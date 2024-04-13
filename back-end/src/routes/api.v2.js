@@ -36,14 +36,6 @@ const handleLoginToVlu = async (req, res) => {
     const { userId, cookie, username, password, lichType, yearStudy, termID } =
       req.query
 
-    console.log(userId)
-    console.log(cookie)
-    console.log(username)
-    console.log(password)
-    console.log(lichType)
-    console.log(yearStudy)
-    console.log(termID)
-
     const saveFileName = userId + '.html'
     const applyCookieHeader = new Headers()
     applyCookieHeader.append('Cookie', cookie)
