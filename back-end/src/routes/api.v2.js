@@ -104,6 +104,7 @@ const handleExportCalendar2Csv = (req, res) => {
   handleWriteFileToCsv(lichHocFileName, lichHocData, res)
 }
 
+router.get('/', (req, res) => res.send('API v2 is working!'))
 router.get('/login-to-vlu', handleLoginToVlu)
 router.get('/get-vlu-cookie', handleGetVluCookie)
 router.get('/get-vlu-calendar', handleGetVluCalendar)
