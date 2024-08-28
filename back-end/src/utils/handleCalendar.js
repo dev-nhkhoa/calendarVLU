@@ -41,8 +41,8 @@ const convertDate = (date) => {
 }
 
 function calcDate(dayOfWeek, weekNumber, isLichThi) {
-  const startWeek = 30
-  const startDate = new Date('2024-03-25') // Ngày bắt đầu
+  const startWeek = 1
+  const startDate = new Date('2024-09-02') // Ngày bắt đầu
 
   // Tính số ngày cần thêm vào dựa trên sự chênh lệch giữa số tuần được truyền vào và tuần bắt đầu
   const daysToAdd = (weekNumber - startWeek) * 7
@@ -142,10 +142,8 @@ const convertJson4LichThiCsv = (fileName) => {
     return hours + ':' + minutes + ' ' + part
   }
 
-  let lichThiData = ''
+  let lichThiData = CSV_HEADER.join(', ')
   let rows = ''
-  // Add 1 dòng của header cho đúng format file import
-  lichThiData += CSV_HEADER.join(', ')
 
   // lặp tất cả phần tử trong lịch học
   for (let i = 0; i < json2Array.length; i++) {
@@ -169,7 +167,7 @@ const convertJson4LichThiCsv = (fileName) => {
 const convertJson4LichHocCsv = (fileName) => {
   const json2Array = removeThings(JSON.parse(readFile(fileName)))
 
-  let lichHocData = ''
+  let lichHocData = CSV_HEADER.join(', ')
   let rows = ''
 
   for (let i = 0; i < json2Array.length; i++) {
