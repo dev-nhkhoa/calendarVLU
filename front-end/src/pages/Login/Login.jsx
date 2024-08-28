@@ -5,7 +5,6 @@ import Warning from '~/components/Warning'
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { link } from '~/user-config.json'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -15,6 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 import { createDropdownTermID, createDropdownYear } from '~/lib/handleThings'
 import NavigateIcon from '~/components/NavigateIcon'
+import { api } from '~/main'
 
 const CSS_LOGIN_INPUT = {
   borderRadius: '6px',
@@ -24,21 +24,12 @@ const CSS_LOGIN_INPUT = {
 }
 const CSS_LOGIN_TEXT = { color: '#eeeeee', fontWeight: '300' }
 
-export default function Login({
-  userId,
-  setIsLogin2Vlu,
-  lichType,
-  setLichType
-}) {
+export default function Login({ userId, setIsLogin2Vlu, lichType, setLichType }) {
   // state Login
   const [username, setUsername] = useState(localStorage.getItem('username'))
   const [password, setPassword] = useState(localStorage.getItem('password'))
-  const [yearStudy, setYearStudy] = useState(
-    localStorage.getItem('yearStudy') || createDropdownYear()[0]
-  )
-  const [termID, setTermID] = useState(
-    localStorage.getItem('termID') || createDropdownTermID()[0]
-  )
+  const [yearStudy, setYearStudy] = useState(localStorage.getItem('yearStudy') || createDropdownYear()[0])
+  const [termID, setTermID] = useState(localStorage.getItem('termID') || createDropdownTermID()[0])
   const [onLoad, setonLoad] = useState(false)
   const [error, setError] = useState()
 
@@ -47,11 +38,8 @@ export default function Login({
   const handleLogin = async () => {
     try {
       setonLoad(true)
-      setError()
 
-      const getVluLoginCookie = await axios.get(
-        link.server.api + '/get-vlu-cookie'
-      )
+      const getVluLoginCookie = await axios.get(api + '/get-vlu-cookie')
       const vluLoginResquestStatus = getVluLoginCookie.status
 
       if (!vluLoginResquestStatus == 200) {
@@ -62,7 +50,7 @@ export default function Login({
 
       const cookie = getVluLoginCookie.data
 
-      const login2Vlu = await axios.get(link.server.api + '/login-to-vlu', {
+      const login2Vlu = await axios.get(api + '/login-to-vlu', {
         params: {
           userId,
           cookie,
@@ -119,28 +107,29 @@ export default function Login({
           alignItems: 'center',
           p: '16px',
           position: 'relative'
-        }}>
+        }}
+      >
         <Typography
           sx={{
             color: '#eeeeee',
             fontSize: { md: '24px', xs: '18px' },
             fontWeight: '500'
-          }}>
+          }}
+        >
           Đăng nhập tài khoản VLU của bạn
         </Typography>
         <Box sx={{ position: 'absolute', top: 0, left: 0, pt: 2 }}>
-          <NavigateIcon navigateTo='/' />
+          <NavigateIcon navigateTo="/" />
         </Box>
-        <Box
-          sx={{ display: 'flex', flexDirection: 'column', maxWidth: '200px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: '200px' }}>
           <Box>
             <Typography sx={CSS_LOGIN_TEXT}>Số tài khoản:</Typography>
             <input
               defaultValue={username}
-              type='text'
-              placeholder='mã số sinh viên'
+              type="text"
+              placeholder="mã số sinh viên"
               style={CSS_LOGIN_INPUT}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={e => setUsername(e.target.value)}
             />
           </Box>
 
@@ -148,18 +137,19 @@ export default function Login({
             <Typography sx={CSS_LOGIN_TEXT}>Mật khẩu:</Typography>
             <input
               defaultValue={password}
-              type='password'
-              placeholder='(vd: 12022003)'
+              type="password"
+              placeholder="(vd: 12022003)"
               style={CSS_LOGIN_INPUT}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
           </Box>
           <Typography sx={CSS_LOGIN_TEXT}>Chọn loại lịch:</Typography>
           <select
             defaultValue={lichType}
-            name='selectLichHoc'
+            name="selectLichHoc"
             style={CSS_LOGIN_INPUT}
-            onChange={(e) => setLichType(e.target.value)}>
+            onChange={e => setLichType(e.target.value)}
+          >
             <option value={'DrawingStudentSchedule_Perior'}>Lịch học</option>
             <option value={'ShowExam'}>Lịch thi</option>
           </select>
@@ -167,10 +157,11 @@ export default function Login({
           <Typography sx={CSS_LOGIN_TEXT}>Chọn hăm học:</Typography>
           <select
             defaultValue={yearStudy}
-            name='selectYear'
+            name="selectYear"
             style={CSS_LOGIN_INPUT}
-            onChange={(e) => setYearStudy(e.target.value)}>
-            {createDropdownYear().map((year) => (
+            onChange={e => setYearStudy(e.target.value)}
+          >
+            {createDropdownYear().map(year => (
               <option key={year} value={year}>
                 {year}
               </option>
@@ -180,24 +171,25 @@ export default function Login({
           <Typography sx={CSS_LOGIN_TEXT}>Chọn học kì:</Typography>
           <select
             defaultValue={termID}
-            name='selectPeriod'
+            name="selectPeriod"
             style={CSS_LOGIN_INPUT}
-            onChange={(e) => setTermID(e.target.value)}>
-            {createDropdownTermID().map((hk) => (
+            onChange={e => setTermID(e.target.value)}
+          >
+            {createDropdownTermID().map(hk => (
               <option key={hk} value={hk}>
                 {hk}
               </option>
             ))}
           </select>
           {error ? (
-            <Typography variant='small' sx={{ color: 'red' }}>
+            <Typography variant="small" sx={{ color: 'red' }}>
               {error}
             </Typography>
           ) : null}
           {!onLoad ? (
             <>
               <Button
-                variant='contained'
+                variant="contained"
                 sx={{
                   mt: '16px',
                   color: '#252525',
@@ -207,7 +199,8 @@ export default function Login({
                     color: '#f5f5f5'
                   }
                 }}
-                onClick={handleLogin}>
+                onClick={handleLogin}
+              >
                 Đăng nhập
               </Button>
             </>
@@ -219,10 +212,9 @@ export default function Login({
                 alignItems: 'center',
                 justifyContent: 'center',
                 p: '5px'
-              }}>
-              <p style={{ color: '#fff', textAlign: 'center' }}>
-                Đang gửi yêu cầu đến server...
-              </p>
+              }}
+            >
+              <p style={{ color: '#fff', textAlign: 'center' }}>Đang gửi yêu cầu đến server...</p>
               <CircularProgress />
             </Box>
           )}

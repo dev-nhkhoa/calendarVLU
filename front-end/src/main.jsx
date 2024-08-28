@@ -8,6 +8,9 @@ import '@fontsource/montserrat'
 
 export const colors = { main: '#fff', bg: '#000' }
 
+export const api = import.meta.env.VITE_API_URL
+export const googleAPI = import.meta.env.VITE_GOOGLE_API_URL
+
 const theme = extendTheme({
   components: {
     MuiTypography: {

@@ -9,8 +9,8 @@ import Cookies from 'js-cookie'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { generateRandomUserID, saveUserIDToCookie } from '~/lib/handleThings'
 import Contact from '../Contact/Contact'
-import { link } from '~/user-config.json'
 import axios from 'axios'
+import { api } from '~/main'
 
 const Home = () => {
   const [loading, setLoading] = React.useState(true)
@@ -29,7 +29,7 @@ const Home = () => {
 
     async function load() {
       try {
-        const req = await axios.get(link.server.api)
+        const req = await axios.get(api)
 
         if (req.status === 200) setLoading(false)
       } catch (error) {
