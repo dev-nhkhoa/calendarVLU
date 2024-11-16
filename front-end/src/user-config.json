@@ -23,7 +23,8 @@
     },
     {
       "name": "Import tự động lịch lên Google Calendar",
-      "atVersion": "2.0"
+      "atVersion": "2.0",
+      "done": true
     },
     {
       "name": "Xuất lịch học - lịch thi dưới dạng file .csv",

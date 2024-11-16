@@ -1,3 +1,4 @@
 filesStorage/*.html
 filesStorage/*.json
 filesStorage/*.csv
+.vercel

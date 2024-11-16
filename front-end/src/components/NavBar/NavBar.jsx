@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Fade,
-  Menu,
-  MenuItem,
-  Typography
-} from '@mui/material'
+import { Box, Button, Container, Fade, Menu, MenuItem, Typography } from '@mui/material'
 import { version } from '../../../package.json'
 import styled from '@emotion/styled'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
@@ -22,7 +14,7 @@ const NavBarButton = styled(Button)(() => ({
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
@@ -42,61 +34,67 @@ const NavBar = () => {
         border: '2px solid black',
         borderRadius: '32px',
         py: '5px'
-      }}>
+      }}
+    >
       {/* Logo & version */}
       <Box sx={{ display: 'flex' }}>
-        <Typography variant='normal'>calenVLU</Typography>
-        <Typography variant='small'>{version}</Typography>
+        <Typography variant="normal">calenVLU</Typography>
+        <Typography variant="small">{version}</Typography>
       </Box>
       <Box sx={{ display: { md: 'flex', xs: 'none' }, gap: 2 }}>
-        <NavBarButton variant='text' onClick={() => navigate('/')}>
+        <NavBarButton variant="text" onClick={() => navigate('/')}>
           Home
         </NavBarButton>
-        <NavBarButton variant='text' onClick={() => navigate('/vlu/login')}>
-          Lịch Vlu Của Bạn
+        <NavBarButton variant="text" onClick={() => navigate('/vlu/login')}>
+          Lịch
         </NavBarButton>
-        <NavBarButton variant='text' onClick={() => navigate('/contact')}>
-          Liên Hệ Dev
+        <NavBarButton variant="text" onClick={() => navigate('/contact')}>
+          Liên Hệ
         </NavBarButton>
       </Box>
       <Box sx={{ display: { md: 'none', xs: 'flex' } }}>
         <Button
-          id='fade-button'
+          id="fade-button"
           aria-controls={open ? 'fade-menu' : undefined}
-          aria-haspopup='true'
+          aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
           sx={{ color: '#252525' }}
-          onClick={handleClick}>
+          onClick={handleClick}
+        >
           <MenuRoundedIcon />
         </Button>
         <Menu
-          id='fade-menu'
+          id="fade-menu"
           MenuListProps={{
             'aria-labelledby': 'fade-button'
           }}
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
-          TransitionComponent={Fade}>
+          TransitionComponent={Fade}
+        >
           <MenuItem
             onClick={() => {
               navigate('/')
               setAnchorEl(null)
-            }}>
+            }}
+          >
             Home
           </MenuItem>
           <MenuItem
             onClick={() => {
               navigate('/vlu/login')
               setAnchorEl(null)
-            }}>
+            }}
+          >
             Lịch Vlu của bạn
           </MenuItem>
           <MenuItem
             onClick={() => {
               navigate('/contact')
               setAnchorEl(null)
-            }}>
+            }}
+          >
             Liên hệ Dev
           </MenuItem>
         </Menu>
